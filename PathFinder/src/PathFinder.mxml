@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="948.6" height="648.4" horizontalScrollPolicy="off" verticalScrollPolicy="off">
+	<mx:ViewStack x="10" y="10" id="viewstack1" width="926" height="626">
+		<mx:Canvas label="Calendar" icon = "@Embed(source = 'Pictures/calendar.jpg')" width="100%" height="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
+			<mx:Image x="0" y="92" width="557" height="534">
+				<mx:source>file:////Users/ajiang8/Desktop/Screen shot 2010-04-07 at 3.46.39 PM.png</mx:source>
+			</mx:Image>
+			<mx:ViewStack x="565" y="92" id="viewstack3" width="351" height="524">
+				<mx:Canvas label="View 1" width="100%" height="100%">
+				</mx:Canvas>
+			</mx:ViewStack>
+			<mx:TitleWindow x="565" y="92" width="351" height="524" layout="absolute" title="To Do:" fontSize="20">
+				<mx:CheckBox x="10" y="20" label="Add a Job" width="311"/>
+			</mx:TitleWindow>
+			<mx:Button x="492" y="35" label="Button" labelPlacement="bottom"/>
+		</mx:Canvas>
+		<mx:Canvas label="Documents" width="120%" height="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
+			<mx:FileSystemTree x="0" y="91" width="265" height="535"/>
+			<mx:Button x="10" y="594" label="Add Folder" width="118"/>
+			<mx:Button x="136" y="594" label="Add Doc" width="118"/>
+			<mx:ViewStack x="273" y="10" id="viewstack2" width="643" height="606">
+				<mx:Canvas label="addDoc" width="100%" height="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
+					<mx:TitleWindow x="0" y="0" width="663" height="626" layout="absolute" title="Add a Document" fontSize="40" fontFamily="Times New Roman" verticalAlign="middle" horizontalAlign="center" horizontalScrollPolicy="off" verticalScrollPolicy="off">
+						<mx:Label x="10" y="10" text="Title:" fontSize="24"/>
+						<mx:TextInput x="73" y="10" width="546" height="32"/>
+						<mx:Label x="10" y="50" text="Description:" fontSize="24"/>
+						<mx:TextInput x="140" y="59" width="469" height="103"/>
+						<mx:Label x="10" y="172" text="File:" fontSize="24"/>
+						<mx:Button x="67" y="213" label="Add to Folder" fontSize="24"/>
+						<mx:Button x="67" y="257" label="Add to Job" fontSize="24" width="170"/>
+						<mx:TextInput x="65" y="170" height="32" width="225"/>
+						<mx:Button x="10" y="494" label="Save" fontSize="24" width="97"/>
+						<mx:Button x="123" y="494" label="Cancel" fontSize="24"/>
+					</mx:TitleWindow>
+				</mx:Canvas>
+			</mx:ViewStack>
+			
+		</mx:Canvas>
+		<mx:Canvas label="Positions" width="100%" height="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
+			<mx:FileSystemTree x="0" y="91" width="265" height="535"/>
+			<mx:Button x="10" y="594" label="Add Folder" width="118"/>
+			<mx:Button x="136" y="594" label="Add Job" width="118"/>
+			<mx:ViewStack x="273" y="10" id="viewstack0" width="643" height="606">
+				<mx:Canvas label="addDoc" width="100%" height="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off" >
+					<mx:TitleWindow x="0" y="0" width="663" height="626" layout="absolute" title="Add a Job" fontSize="40" fontFamily="Times New Roman" verticalAlign="middle" horizontalAlign="center">
+						<mx:TextInput x="123" y="10" width="496" height="31"/>
+						<mx:Label x="10" y="10" text="Company:" height="31" width="119" fontSize="24"/>
+						<mx:Label x="10" y="49" text="Title:" fontSize="24"/>
+						<mx:TextInput x="73" y="49" width="546" height="32"/>
+						<mx:TextInput x="189" y="89" width="430" height="166"/>
+						<mx:Text x="10" y="89" text="Requirements for Application:" width="171" height="65" fontSize="24" textAlign="right"/>
+						<mx:Button x="10" y="264" label="Add Another Field" fontSize="24"/>
+						<mx:Button x="10" y="494" label="Save" fontSize="24" width="97"/>
+						<mx:Button x="123" y="494" label="Cancel" fontSize="24"/>
+					</mx:TitleWindow>
+				</mx:Canvas>
+			</mx:ViewStack>
+		</mx:Canvas>
+	</mx:ViewStack>
+	<mx:ToggleButtonBar x="10" y="10">
+	</mx:ToggleButtonBar>
+	<mx:ToggleButtonBar dataProvider="viewstack1" height="85" width="264" x="10" y="10">
+	</mx:ToggleButtonBar>
+	
+</mx:WindowedApplication>
