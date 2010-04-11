@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="948.6" height="648.4" horizontalScrollPolicy="off" verticalScrollPolicy="off">
 	<mx:ViewStack x="10" y="10" id="viewstack1" width="926" height="626">
-		<mx:Canvas label="Calendar" icon = "@Embed(source = 'Pictures/calendar.jpg')" width="100%" height="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
+		<mx:Canvas label="Calendar" width="100%" height="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
 			<mx:Image x="0" y="92" width="557" height="534">
 				<mx:source>file:////Users/ajiang8/Desktop/Screen shot 2010-04-07 at 3.46.39 PM.png</mx:source>
 			</mx:Image>
