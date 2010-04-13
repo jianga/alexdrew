@@ -48,13 +48,15 @@
 					<mx:TitleWindow x="0" y="0" width="663" height="626" layout="absolute" title="Add a Job" fontSize="40" fontFamily="Times New Roman" verticalAlign="middle" horizontalAlign="center">
 						<mx:TextInput x="123" y="10" width="496" height="31" fontSize="24"/>
 						<mx:Label x="10" y="10" text="Company:" height="31" width="119" fontSize="24"/>
-						<mx:Label x="10" y="49" text="Title:" fontSize="24"/>
+						<mx:Label x="10" y="49" text="Title:" fontSize="24" height="32"/>
 						<mx:TextInput x="73" y="49" width="546" height="32" fontSize="24"/>
-						<mx:TextInput x="189" y="89" width="430" height="166" fontSize="24"/>
-						<mx:Text x="10" y="89" text="Requirements for Application:" width="171" height="65" fontSize="24" textAlign="right"/>
-						<mx:Button x="10" y="264" label="Add Another Field" fontSize="24"/>
+						<mx:TextInput x="189" y="138" width="430" height="166" fontSize="24"/>
+						<mx:Text x="10" y="138" text="Requirements for Application:" width="171" height="65" fontSize="24" textAlign="right"/>
+						<mx:Button x="10" y="313" label="Add Another Field" fontSize="24"/>
 						<mx:Button x="10" y="494" label="Save" fontSize="24" width="97" click="jobpane.selectedChild=initialjob;"/>
 						<mx:Button x="123" y="494" label="Cancel" fontSize="24" click = "jobpane.selectedChild=initialjob;"/>
+						<mx:DateField x="115" y="89" height="32" fontSize="24"/>
+						<mx:Label x="10" y="91" text="Deadline:" width="97" height="32" fontSize="24"/>
 					</mx:TitleWindow>
 				</mx:Canvas>
 			</mx:ViewStack>
