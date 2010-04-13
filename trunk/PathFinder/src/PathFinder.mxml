@@ -19,10 +19,15 @@
 			private var newFolderPanel:Panel;
 			private var nameInput:TextInput = new TextInput();
 			private var openSequence:Array = [];
-			            [Bindable] public var myJobs:XML =
-            <root label = "My Jobs">
-            	<folder label = "Google"/>
+			[Bindable] public var myJobs:XML =
+            <root label = "My Jobs" isBranch ="true">
             </root>;
+            
+            [Bindable] public var myDocs:XML =
+            <root label = "My Documents" isBranch = "true">
+            </root>;
+
+			[Bindable] public var selectedFolder:XML;
 
 			[Embed(source="Pictures/calendar.jpg")]
 			public var calendarpicture:Class;
@@ -69,18 +74,34 @@
 			}
 
 			private function saveFolder(evt:MouseEvent):void {
-                myJobs.appendChild(<folder label = {nameInput.text}/>);
+				
+				
+							
+				if(viewstack1.selectedChild.label == "Positions"){
+					selectedFolder = jobTree.selectedItem as XML;
+					if(selectedFolder != null){
+    					selectedFolder.appendChild(<folder label = {nameInput.text} isBranch = "true"/>);				
+    				}
+    				else{
+                		myJobs.appendChild(<folder label = {nameInput.text} isBranch = "true"/>);
+                		}
+    			}
+    			
+    			if(viewstack1.selectedChild.label == "Documents"){
+    				selectedFolder = docTree.selectedItem as XML;
+    				if(selectedFolder != null){
+    					selectedFolder.appendChild(<folder label = {nameInput.text} isBranch = "true"/>);				
+    				}
+    				else{
+                		myDocs.appendChild(<folder label = {nameInput.text} isBranch = "true"/>);
+                		}
+    			}
+    			
                 PopUpManager.removePopUp(newFolderPanel);
             }
 			
 			private function closePopUp(evt:MouseEvent):void {
                 PopUpManager.removePopUp(newFolderPanel);
-            }
-
-            private function createPopUp(evt:MouseEvent):void {
-            	init();
-                PopUpManager.addPopUp(newFolderPanel, this, true);
-                PopUpManager.centerPopUp(newFolderPanel);
             }
 			
 			private function getFolderPopUp(event:MouseEvent):void{
@@ -124,7 +145,9 @@
 					</mx:TitleWindow>
 				</mx:Canvas>
 			</mx:ViewStack>
-			<mx:Tree x="0" y="88" width="265" height="498"></mx:Tree>
+			<mx:Tree id = "docTree" x="0" y="88" width="265" height="498" showRoot="true" labelField="@label" dragEnabled="true" dropEnabled="true" dataProvider="{myDocs}">	
+
+			</mx:Tree>
 			
 		</mx:Canvas>
 		<mx:Canvas label="Positions" width="100%" height="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off" icon="@Embed(source='Pictures/briefcasepic.jpg')">
@@ -150,7 +173,7 @@
 					</mx:TitleWindow>
 				</mx:Canvas>
 			</mx:ViewStack>
-			<mx:Tree id = "myTree" x="0" y="88" width="265" height="498" showRoot="true" labelField="@label" dragEnabled="true" dropEnabled="true" dataProvider="{myJobs}">	
+			<mx:Tree id = "jobTree" x="0" y="88" width="265" height="498" showRoot="true" labelField="@label" dragEnabled="true" dropEnabled="true" dataProvider="{myJobs}">	
 
 			</mx:Tree>
 		</mx:Canvas>
@@ -164,15 +187,17 @@
 		<![CDATA[
 			import model.Doc;
 			import model.Job;
+			[Bindable] public var selectedNode:XML;
 			
 			private function saveJob():void {
 				jobpane.selectedChild=initialjob;
 				var job:Job = new Job();
-				//Jobs.addItem(job);
 				job.company = jobcompany.text;
 				job.title = jobtitle.text;
 				job.requirements = jobrequirements.text;
 				job.deadline = jobdeadline.selectedDate;
+				selectedNode = jobTree.selectedItem as XML;
+				selectedNode.appendChild(<job label = {job.company}/>);
 				jobcompany.text = "";
 				jobtitle.text = "";
 				jobrequirements.text = "";
