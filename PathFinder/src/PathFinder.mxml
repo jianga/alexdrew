@@ -23,15 +23,16 @@
 			<mx:Canvas id = "addDoc" label="AddDoc" width="100%" height="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
 					<mx:TitleWindow x="0" y="0" width="663" height="626" layout="absolute" title="Add a Document" fontSize="40" fontFamily="Times New Roman" verticalAlign="middle" horizontalAlign="center" horizontalScrollPolicy="off" verticalScrollPolicy="off">
 						<mx:Label x="10" y="10" text="Title:" fontSize="24"/>
-						<mx:TextInput x="73" y="10" width="546" height="32" fontSize="24"/>
+						<mx:TextInput x="73" y="10" width="546" height="32" fontSize="24" id="doctitle"/>
 						<mx:Label x="10" y="50" text="Description:" fontSize="24"/>
-						<mx:TextInput x="140" y="59" width="469" height="103" fontSize="24"/>
+						<mx:TextInput x="140" y="59" width="469" height="103" fontSize="24" id="docdescription"/>
 						<mx:Label x="10" y="172" text="File:" fontSize="24"/>
 						<mx:Button x="67" y="213" label="Add to Folder" fontSize="24"/>
 						<mx:Button x="67" y="257" label="Add to Job" fontSize="24" width="170"/>
-						<mx:TextInput x="65" y="170" height="32" width="225" fontSize="24"/>
-						<mx:Button x="10" y="494" label="Save" fontSize="24" width="97" click = "documentpane.selectedChild=initialdoc;"/>
-						<mx:Button x="123" y="494" label="Cancel" fontSize="24" click = "documentpane.selectedChild=initialdoc;"/>
+						<mx:TextInput x="65" y="170" height="32" width="225" fontSize="24" id="docfile"/>
+						<mx:Button x="10" y="494" label="Save" fontSize="24" width="97" click = "saveDoc()"/>
+						<mx:Button x="115" y="494" label="Cancel" fontSize="24" click="cancelDoc()"/>
+						<mx:Button x="220" y="494" label="Clear All" fontSize="24" click = "clearDocFields()"/>
 					</mx:TitleWindow>
 				</mx:Canvas>
 			</mx:ViewStack>
@@ -54,7 +55,8 @@
 						<mx:Text x="10" y="138" text="Requirements for Application:" width="171" height="65" fontSize="24" textAlign="right"/>
 						<mx:Button x="10" y="313" label="Add Another Field" fontSize="24"/>
 						<mx:Button x="10" y="494" label="Save" fontSize="24" width="97" click="saveJob()" />
-						<mx:Button x="123" y="494" label="Cancel" fontSize="24" click = "jobpane.selectedChild=initialjob;"/>
+						<mx:Button x="115" y="494" label="Cancel" fontSize="24" click="cancelJob()"/>
+						<mx:Button x="220" y="494" label="Clear All" fontSize="24" click = "clearJobFields()"/>
 						<mx:DateField showToday = "true" x="115" y="89" height="32" fontSize="24" id="jobdeadline"/>
 						<mx:Label x="10" y="91" text="Deadline:" width="97" height="32" fontSize="24"/>
 					</mx:TitleWindow>
@@ -69,6 +71,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import model.Doc;
 			import model.Job; 
 			
 			private function saveJob():void {
@@ -85,12 +88,38 @@
 			}
 			
 			private function saveDoc():void {
+				documentpane.selectedChild=initialdoc;
+				var doc:Doc = new Doc();
+				doc.title = doctitle.text;
+				doc.description = docdescription.text;
+				doc.file = docfile.text;
+				doctitle.text = "";
+				docdescription.text = "";
+				docfile.text = "";
+			}
+			
+			private function clearDocFields():void {
+				doctitle.text = "";
+				docdescription.text = "";
+				docfile.text = "";
+			}
+			
+			private function clearJobFields():void {
+				jobcompany.text = "";
+				jobtitle.text = "";
+				jobrequirements.text = "";
+				jobdeadline.text = "";
+			}
+			
+			private function cancelDoc():void {
+				documentpane.selectedChild=initialdoc;
+				doctitle.text = "";
+				docdescription.text = "";
+				docfile.text = "";
+			}
+			
+			private function cancelJob():void {
 				jobpane.selectedChild=initialjob;
-				var job:Job = new Job();
-				job.company = jobcompany.text;
-				job.title = jobtitle.text;
-				job.requirements = jobrequirements.text;
-				job.deadline = jobdeadline.selectedDate;
 				jobcompany.text = "";
 				jobtitle.text = "";
 				jobrequirements.text = "";
