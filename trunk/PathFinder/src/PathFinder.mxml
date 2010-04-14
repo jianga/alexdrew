@@ -134,7 +134,7 @@
 	<mx:ViewStack x="10" y="10" id="viewstack1" width="926" height="626">
 		<mx:Canvas label="Calendar" width="100%" height="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off" icon="@Embed(source='Pictures/calpic.jpg')">
 			<mx:Image x="0" y="92" width="557" height="534">
-				<mx:source>file:////Users/ajiang8/Desktop/Screen shot 2010-04-07 at 3.46.39 PM.png</mx:source>
+				<mx:source>Pictures/calendar.png</mx:source>
 			</mx:Image>
 			<mx:ViewStack x="565" y="92" id="viewstack3" width="351" height="524">
 				<mx:Canvas label="View 1" width="100%" height="100%">
@@ -143,6 +143,7 @@
 			<mx:TitleWindow x="565" y="92" width="351" height="524" layout="absolute" title="To Do:" fontSize="20">
 				<mx:CheckBox x="10" y="20" label="Add a Job" width="311"/>
 			</mx:TitleWindow>
+			<mx:Text x="296" y="10" text="Welcome to PathFinder!" fontSize="50" color="#497AD2" width="556" fontFamily="Georgia"/>
 		</mx:Canvas>
 		<mx:Canvas label="Documents" width="120%" height="100%" horizontalScrollPolicy="off" visible="true" verticalScrollPolicy="off" icon="@Embed(source='Pictures/docpicturesm.jpg')">
 			<mx:Button x="10" y="594" label="Add Folder" width="118" click="getFolderPopUp(event)"/>
@@ -166,7 +167,7 @@
 					<mx:Button x="237" y="557" label="Clear All" fontSize="24" click = "clearDocFields()"/>
 				</mx:Canvas>
 			</mx:ViewStack>
-			<mx:Tree id = "docTree" x="0" y="88" width="265" height="498" showRoot="true" labelField="@label" dragEnabled="true" dropEnabled="true" dataProvider="{myDocs}">	
+			<mx:Tree id = "docTree" x="0" y="88" width="265" height="498" doubleClickEnabled = "true" showRoot="true" labelField="@label" dragEnabled="true" dropEnabled="true" dataProvider="{myDocs}">	
 
 			</mx:Tree>
 			
@@ -351,7 +352,7 @@
 				jobrequirements.text = selectedJob.requirements;
 				jobdeadline.selectedDate = selectedJob.deadline;
 				
-				delete jobList[index];
+				//delete jobList[index];
 				
 			}
 			
@@ -363,7 +364,7 @@
 				documentpane.selectedChild=addDoc;
 				doctitle.text = selectedNode.attribute("label");
 				var selectedDoc:Doc;
-				for (var i:int = 0; i < jobList.length; ++i){
+				for (var i:int = 0; i < docList.length; ++i){
 					var doc:Doc = docList[i];
 					if(doc.title == doctitle.text){
 						selectedDoc = doc;
@@ -383,14 +384,17 @@
 				doc.description = docdescription.text;
 				doc.file = docfile.text;
 				selectedNode = docTree.selectedItem as XML;
-				selectedNode.appendChild(<doc label = {doc.title}/>);
 				if(selectedNode == null){
 					selectedNode = myDocs;
 				}
+				selectedNode.appendChild(<doc label = {doc.title}/>);
+
 				docList.push(doc);
 				doctitle.text = "";
 				docdescription.text = "";
 				docfile.text = "";
+				
+				docTree.addEventListener(MouseEvent.DOUBLE_CLICK, doubleClickDoc);
 			}
 			
 			private function clearDocFields():void {
