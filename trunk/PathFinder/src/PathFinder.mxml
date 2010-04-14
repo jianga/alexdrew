@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" creationComplete="init()" layout="absolute" width="948.6" height="648.4" horizontalScrollPolicy="off" verticalScrollPolicy="off">
+	<mx:Style>
+       	.myFontStyle { 
+           	fontSize: 24;
+      	}
+    </mx:Style>
+	
 	<mx:Script>
 		<![CDATA[
 			import mx.controls.Image;
@@ -15,7 +21,8 @@
             import mx.collections.ArrayCollection;
             import mx.collections.XMLListCollection;
             
-
+            private var OKButton:Button = new Button();
+			private var dropdown:ComboBox = new ComboBox();
 	
 			private var newFolderPanel:Panel;
 			[Bindable] private var nameInput:TextInput = new TextInput();
@@ -71,7 +78,16 @@
                 newFolderPanel.height = 140;
                 newFolderPanel.addChild(vb);
                 newFolderPanel.addChild(cb);
-            	
+                
+                
+				dropdown.dataProvider = fieldlist;
+				dropdown.styleName="myFontStyle";
+				dropdown.id="dropdown";
+
+				OKButton.styleName="myFontStyle";
+				OKButton.label="OK";
+				OKButton.addEventListener(MouseEvent.CLICK, selectNewField);
+            
 			}
 
 
@@ -162,14 +178,14 @@
 				<mx:Canvas id = "initialjob" label="Initial" width="100%" height="100%">
 				</mx:Canvas>
 				<mx:Canvas id = "addJob" label="addJob" width="100%" height="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off" >
-					<mx:TitleWindow x="0" y="0" width="663" height="626" layout="absolute" title="Add a Job" fontSize="40" fontFamily="Times New Roman" verticalAlign="middle" horizontalAlign="center">
+					<mx:TitleWindow x="0" y="0" id="jobwindow" width="663" height="626" layout="absolute" title="Add a Job" fontSize="40" fontFamily="Times New Roman" verticalAlign="middle" horizontalAlign="center">
 						<mx:TextInput x="123" y="10" width="496" height="31" fontSize="24" id="jobcompany"/>
 						<mx:Label x="10" y="10" text="Company:" height="31" width="119" fontSize="24"/>
-						<mx:Label x="10" y="49" text="Title:" fontSize="24" height="32"/>
+						<mx:Label x="10" y="49" text="Title:" id="sizeref" fontSize="24" height="32"/>
 						<mx:TextInput x="73" y="49" width="546" height="32" fontSize="24" id="jobtitle"/>
 						<mx:TextInput x="189" y="138" width="430" height="166" fontSize="24" id="jobrequirements"/>
 						<mx:Text x="10" y="138" text="Requirements for Application:" width="171" height="65" fontSize="24" textAlign="right"/>
-						<mx:Button x="10" y="313" label="Add Another Field" fontSize="24"/>
+						<mx:Button x="10" y="313" id = "addbutton" label="Add Another Field" fontSize="24" click="addField()"/>
 						<mx:Button x="10" y="494" label="Save" fontSize="24" width="97" click="saveJob()" />
 						<mx:Button x="115" y="494" label="Cancel" fontSize="24" click="cancelJob()"/>
 						<mx:Button x="220" y="494" label="Clear All" fontSize="24" click = "clearJobFields()"/>
@@ -190,12 +206,103 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import mx.controls.DateChooser;
+			import mx.controls.Text;
+			import mx.controls.List;
+			import mx.controls.ComboBox;
 			import model.Doc;
 			import model.Job;
+			import mx.binding.utils.BindingUtils;
+			
+			public var fieldlist:Array= new Array("Interview Date","Recommendation","Recruiter Info");
+			
+			private function addField():void {
+				jobwindow.addChild(dropdown);
+				dropdown.x=10;
+				dropdown.y=addbutton.y;
+				addbutton.y = addbutton.y+50;
+
+				jobwindow.addChild(OKButton);
+				OKButton.x=250
+				OKButton.y=dropdown.y
+				
+				
+			}
+
+
+			private function selectNewField(event:MouseEvent):void{
+				if (dropdown.selectedItem=="Interview Date") {
+					jobwindow.removeChild(OKButton);
+					
+					var date:Label = new Label();
+					date.text="Date:";
+					date.styleName="myFontStyle";
+					jobwindow.addChild(date);	
+					date.x=150;
+				    date.y=dropdown.y;
+					var datechoose:DateField=new DateField();
+					datechoose.styleName="myFontStyle";
+					jobwindow.addChild(datechoose);
+					datechoose.x=225;
+					datechoose.y = dropdown.y;
+					addbutton.y = addbutton.y+60;
+					
+					var time:Label = new Label();
+					time.text="Time:";
+					time.styleName="myFontStyle";
+					jobwindow.addChild(time);	
+					time.x=375;
+				    time.y=dropdown.y;
+				    var Tinput:TextInput = new TextInput();
+					Tinput.styleName="myFontStyle";
+					jobwindow.addChild(Tinput);
+					Tinput.x=435;
+					Tinput.y=dropdown.y;
+				    
+				    
+				    var place:Label = new Label();
+					place.text="Place:";
+					place.styleName="myFontStyle";
+					jobwindow.addChild(place);	
+					place.x=150;
+				    place.y=dropdown.y+50;
+					var Pinput:TextInput = new TextInput();
+					Pinput.styleName="myFontStyle";
+					jobwindow.addChild(Pinput);
+					Pinput.x=225;
+					Pinput.y=dropdown.y+50;
+				    
+					var interviewdatetext:Label = new Label();
+					interviewdatetext.text="Interview:";
+					interviewdatetext.styleName="myFontStyle";
+					jobwindow.addChild(interviewdatetext);	
+					interviewdatetext.x=dropdown.x;
+					interviewdatetext.y=dropdown.y;
+					jobwindow.removeChild(dropdown);			
+				}
+				else if (dropdown.selectedItem!=" "){
+					jobwindow.removeChild(OKButton);
+					var input:TextInput = new TextInput();
+					input.styleName="myFontStyle";
+					jobwindow.addChild(input);
+					input.x=250;
+					input.y=dropdown.y;	
+					var textlabel:Label = new Label();
+					textlabel.text=dropdown.selectedItem.toString();
+					textlabel.styleName="myFontStyle";
+					jobwindow.addChild(textlabel);	
+					textlabel.x=dropdown.x;
+					textlabel.y=dropdown.y;
+					jobwindow.removeChild(dropdown);			
+				}
+				
+			}
+			
+
 			[Bindable] public var selectedNode:XML;
 			[Bindable] private var jobList:Array = new Array();
 			[Bindable] private var docList:Array = new Array();
-						
+
 			private function saveJob():void {
 				jobpane.selectedChild=initialjob;
 				var job:Job = new Job();
