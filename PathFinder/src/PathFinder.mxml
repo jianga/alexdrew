@@ -16,8 +16,9 @@
             import mx.collections.XMLListCollection;
             
 
+	
 			private var newFolderPanel:Panel;
-			private var nameInput:TextInput = new TextInput();
+			[Bindable] private var nameInput:TextInput = new TextInput();
 			private var openSequence:Array = [];
 			[Bindable] public var myJobs:XML =
             <root label = "My Jobs" isBranch ="true">
@@ -70,8 +71,9 @@
                 newFolderPanel.height = 140;
                 newFolderPanel.addChild(vb);
                 newFolderPanel.addChild(cb);
-            
+            	
 			}
+
 
 			private function saveFolder(evt:MouseEvent):void {
 				
@@ -80,28 +82,31 @@
 				if(viewstack1.selectedChild.label == "Positions"){
 					selectedFolder = jobTree.selectedItem as XML;
 					if(selectedFolder != null){
-    					selectedFolder.appendChild(<folder label = {nameInput.text} isBranch = "true"/>);				
+    					selectedFolder.appendChild(<folder id = {nameInput.text} label = {nameInput.text} isBranch = "true"/>);				
     				}
     				else{
-                		myJobs.appendChild(<folder label = {nameInput.text} isBranch = "true"/>);
+                		myJobs.appendChild(<folder id = {nameInput.text} label = {nameInput.text} isBranch = "true"/>);
                 		}
     			}
     			
     			if(viewstack1.selectedChild.label == "Documents"){
     				selectedFolder = docTree.selectedItem as XML;
     				if(selectedFolder != null){
-    					selectedFolder.appendChild(<folder label = {nameInput.text} isBranch = "true"/>);				
+    					selectedFolder.appendChild(<folder id = {nameInput.text} label = {nameInput.text} isBranch = "true"/>);				
     				}
     				else{
-                		myDocs.appendChild(<folder label = {nameInput.text} isBranch = "true"/>);
+                		myDocs.appendChild(<folder id = {nameInput.text} label = {nameInput.text} isBranch = "true"/>);
                 		}
+                	
     			}
     			
+    			nameInput.text = "";
                 PopUpManager.removePopUp(newFolderPanel);
             }
 			
 			private function closePopUp(evt:MouseEvent):void {
                 PopUpManager.removePopUp(newFolderPanel);
+                nameInput.text = "";
             }
 			
 			private function getFolderPopUp(event:MouseEvent):void{
@@ -173,7 +178,7 @@
 					</mx:TitleWindow>
 				</mx:Canvas>
 			</mx:ViewStack>
-			<mx:Tree id = "jobTree" x="0" y="88" width="265" height="498" showRoot="true" labelField="@label" dragEnabled="true" dropEnabled="true" dataProvider="{myJobs}">	
+			<mx:Tree id = "jobTree" x="0" y="88" width="265" height="498" doubleClickEnabled = "true" showRoot="true" labelField="@label" dragEnabled="true" dropEnabled="true" dataProvider="{myJobs}">	
 
 			</mx:Tree>
 		</mx:Canvas>
@@ -188,7 +193,9 @@
 			import model.Doc;
 			import model.Job;
 			[Bindable] public var selectedNode:XML;
-			
+			[Bindable] private var jobList:Array = new Array();
+			[Bindable] private var docList:Array = new Array();
+						
 			private function saveJob():void {
 				jobpane.selectedChild=initialjob;
 				var job:Job = new Job();
@@ -197,11 +204,42 @@
 				job.requirements = jobrequirements.text;
 				job.deadline = jobdeadline.selectedDate;
 				selectedNode = jobTree.selectedItem as XML;
-				selectedNode.appendChild(<job label = {job.company}/>);
+				if(selectedNode == null){
+					selectedNode = myJobs;
+				}
+				selectedNode.appendChild(<job id = {job.company} label = {job.company}/>);
+				jobList.push(job);
 				jobcompany.text = "";
 				jobtitle.text = "";
 				jobrequirements.text = "";
 				jobdeadline.text = "";
+				
+				            
+            	jobTree.addEventListener(MouseEvent.DOUBLE_CLICK, doubleClickJob);
+				
+			}
+			
+						
+			private function doubleClickJob(evt:MouseEvent):void{
+//				if(selectedNode.namespace().prefix =="job"){
+//					
+//				}
+				selectedNode = jobTree.selectedItem as XML;
+				jobpane.selectedChild=addJob;
+				jobcompany.text = selectedNode.attribute("label");
+				var selectedJob:Job;
+				for (var i:int = 0; i < jobList.length; ++i){
+					var job:Job = jobList[i];
+					if(job.company == jobcompany.text){
+						selectedJob = job;
+					}
+				}	
+				
+				jobcompany.text = selectedJob.company;
+				jobtitle.text = selectedJob.title;
+				jobrequirements.text = selectedJob.requirements;
+				jobdeadline.selectedDate = selectedJob.deadline;
+				
 			}
 			
 			private function saveDoc():void {
@@ -210,6 +248,12 @@
 				doc.title = doctitle.text;
 				doc.description = docdescription.text;
 				doc.file = docfile.text;
+				selectedNode = docTree.selectedItem as XML;
+				selectedNode.appendChild(<doc label = {doc.title}/>);
+				if(selectedNode == null){
+					selectedNode = myDocs;
+				}
+				docList.push(doc);
 				doctitle.text = "";
 				docdescription.text = "";
 				docfile.text = "";
