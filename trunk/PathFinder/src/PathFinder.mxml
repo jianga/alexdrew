@@ -301,9 +301,11 @@
 			}
 			
 
-			[Bindable] public var selectedNode:XML;
+			[Bindable] private var selectedNode:XML;
 			[Bindable] private var jobList:Array = new Array();
 			[Bindable] private var docList:Array = new Array();
+			[Bindable] private var editing:Boolean = false;
+			[Bindable] private var index:int;
 
 			private function saveJob():void {
 				jobpane.selectedChild=initialjob;
@@ -316,6 +318,10 @@
 				if(selectedNode == null){
 					selectedNode = myJobs;
 				}
+				if(editing = true){
+					delete jobList[index];
+					delete myJobs.child
+				}
 				selectedNode.appendChild(<job id = {job.company} label = {job.company}/>);
 				jobList.push(job);
 				jobcompany.text = "";
@@ -323,22 +329,20 @@
 				jobrequirements.text = "";
 				jobdeadline.text = "";
 				
-				            
+				editing = false;
             	jobTree.addEventListener(MouseEvent.DOUBLE_CLICK, doubleClickJob);
 				
 			}
 			
 						
 			private function doubleClickJob(evt:MouseEvent):void{
-//				if(selectedNode.namespace().prefix =="job"){
-//					
-//				}
+				
+				editing = true;
 				selectedNode = jobTree.selectedItem as XML;
 				var parent:XML = selectedNode.parent();
 				jobpane.selectedChild=addJob;
 				jobcompany.text = selectedNode.attribute("label");
 				var selectedJob:Job;
-				var index:int;
 				for (var i:int = 0; i < jobList.length; ++i){
 					var job:Job = jobList[i];
 					if(job.company == jobcompany.text){
@@ -352,14 +356,13 @@
 				jobrequirements.text = selectedJob.requirements;
 				jobdeadline.selectedDate = selectedJob.deadline;
 				
-				//delete jobList[index];
+				
 				
 			}
 			
 			private function doubleClickDoc(evt:MouseEvent):void{
-//				if(selectedNode.namespace().prefix =="job"){
-//					
-//				}
+				
+				
 				selectedNode = docTree.selectedItem as XML;
 				documentpane.selectedChild=addDoc;
 				doctitle.text = selectedNode.attribute("label");
@@ -387,6 +390,7 @@
 				if(selectedNode == null){
 					selectedNode = myDocs;
 				}
+				
 				selectedNode.appendChild(<doc label = {doc.title}/>);
 
 				docList.push(doc);
