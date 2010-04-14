@@ -9,6 +9,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import mx.controls.List;
 			import mx.controls.Image;
 			import mx.containers.Panel;
 			import mx.managers.PopUpManager
@@ -23,6 +24,7 @@
             
             private var OKButton:Button = new Button();
 			private var dropdown:ComboBox = new ComboBox();
+			private var browserPanel:Panel = new Panel();
 	
 			private var newFolderPanel:Panel;
 			[Bindable] private var nameInput:TextInput = new TextInput();
@@ -45,7 +47,7 @@
 			public var briefcasepicture:Class;
 			[Embed(source="Pictures/calendar.jpg")]
 			public var folderpicture:Class;
-
+            public var fileThingy:List = new List();
 			
 			private function init():void{
 				
@@ -62,7 +64,7 @@
                 saveButton.label = "Save";
                 saveButton.addEventListener(MouseEvent.CLICK, saveFolder);
                 cancelButton.label = "Cancel";
-                cancelButton.addEventListener(MouseEvent.CLICK, closePopUp);
+                cancelButton.addEventListener(MouseEvent.CLICK, closePopUpNF);
                 cb.addChild(s);
                 cb.addChild(saveButton);
                 cb.addChild(cancelButton);
@@ -79,6 +81,36 @@
                 newFolderPanel.addChild(vb);
                 newFolderPanel.addChild(cb);
                 
+				browserPanel.width = 300;
+				browserPanel.height = 200;
+				browserPanel.title="Select Document to Add...";
+				browserPanel.visible=true;
+				var cb2:ControlBar = new ControlBar();
+				var s2:Spacer = new Spacer();
+                s2.percentWidth = 100;				
+				var selectButton:Button=new Button();
+				selectButton.label = "Choose";
+                selectButton.addEventListener(MouseEvent.CLICK, saveNewDoc);
+                var cancelmeButton:Button = new Button();
+                cancelmeButton.label = "Cancel";
+                cancelmeButton.addEventListener(MouseEvent.CLICK, closePopUpB);   
+                var options:Array = new Array("Resume");
+                fileThingy.dataProvider = options;      
+                var vb2:VBox = new VBox();  
+                vb2.setStyle("paddingBottom", 5);
+                vb2.setStyle("paddingLeft", 5);
+                vb2.setStyle("paddingRight", 5);
+                vb2.setStyle("paddingTop", 5);
+                vb2.addChild(fileThingy);
+                fileThingy.height=100;
+                fileThingy.width=200;
+                cb2.addChild(s);
+                cb2.addChild(selectButton);
+                cb2.addChild(cancelmeButton);
+                browserPanel.addChild(vb2);
+                browserPanel.addChild(cb2);
+                
+                
                 
 				dropdown.dataProvider = fieldlist;
 				dropdown.styleName="myFontStyle";
@@ -89,6 +121,17 @@
 				OKButton.addEventListener(MouseEvent.CLICK, selectNewField);
             
 			}
+			
+			private function saveNewDoc(evt:MouseEvent):void{
+				docfile.text=fileThingy.selectedItem.toString();
+				trace("saved new doc name");
+				PopUpManager.removePopUp(browserPanel);
+			}
+			
+		    private function newBrowseWindow(evt:MouseEvent):void{
+		    	PopUpManager.addPopUp(browserPanel, this, true);
+                PopUpManager.centerPopUp(browserPanel);
+		    }
 
 
 			private function saveFolder(evt:MouseEvent):void {
@@ -120,9 +163,14 @@
                 PopUpManager.removePopUp(newFolderPanel);
             }
 			
-			private function closePopUp(evt:MouseEvent):void {
+			private function closePopUpNF(evt:MouseEvent):void {
                 PopUpManager.removePopUp(newFolderPanel);
                 nameInput.text = "";
+            }
+            
+            private function closePopUpB(evt:MouseEvent):void {
+            	trace("closing browse window");
+                PopUpManager.removePopUp(browserPanel);
             }
 			
 			private function getFolderPopUp(event:MouseEvent):void{
@@ -161,6 +209,7 @@
 						<mx:Button x="67" y="213" label="Add to Folder" fontSize="24"/>
 						<mx:Button x="67" y="257" label="Add to Job" fontSize="24" width="170"/>
 						<mx:TextInput x="65" y="170" height="32" width="225" fontSize="24" id="docfile"/>
+						<mx:Button x="298" y="170" label="Browse..." fontSize="20" click="newBrowseWindow(event)"/>
 					</mx:TitleWindow>
 					<mx:Button x="10" y="557" label="Save" fontSize="24" width="97" click = "saveDoc()"/>
 					<mx:Button x="115" y="557" label="Cancel" fontSize="24" click="cancelDoc()"/>
@@ -390,9 +439,7 @@
 				if(selectedNode == null){
 					selectedNode = myDocs;
 				}
-				
 				selectedNode.appendChild(<doc label = {doc.title}/>);
-
 				docList.push(doc);
 				doctitle.text = "";
 				docdescription.text = "";
