@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" creationComplete="init()" layout="absolute" width="948.6" height="648.4" horizontalScrollPolicy="off" verticalScrollPolicy="off">
+<mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" creationComplete="init()" layout="absolute" width="948.6" height="656" horizontalScrollPolicy="off" verticalScrollPolicy="off">
 	<mx:Style>
        	.myFontStyle { 
            	fontSize: 24;
@@ -194,26 +194,24 @@
 			<mx:Text x="296" y="10" text="Welcome to PathFinder!" fontSize="50" color="#497AD2" width="556" fontFamily="Georgia"/>
 		</mx:Canvas>
 		<mx:Canvas label="Documents" width="120%" height="100%" horizontalScrollPolicy="off" visible="true" verticalScrollPolicy="off" icon="@Embed(source='Pictures/docpicturesm.jpg')">
-			<mx:Button x="10" y="594" label="Add Folder" width="118" click="getFolderPopUp(event)"/>
-			<mx:Button x="136" y="594" label="Add Doc" width="118" click="documentpane.selectedChild=addDoc;"/>
+			<mx:Button x="0" y="589" label="Add Folder" width="124" click="getFolderPopUp(event)" fontSize="14"/>
+			<mx:Button x="141" y="589" label="Add Doc" width="124" click="documentpane.selectedChild=addDoc;" fontSize="14"/>
 			<mx:ViewStack x="273" y="10" id="documentpane" width="643" height="606">
 			<mx:Canvas id = "initialdoc" label="Initial" width="100%" height="100%">
 			</mx:Canvas>
 			<mx:Canvas id = "addDoc" label="AddDoc" width="100%" height="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
-					<mx:TitleWindow x="0" y="0" width="643" height="549" layout="absolute" title="Add a Document" fontSize="40" fontFamily="Times New Roman" verticalAlign="middle" horizontalAlign="center" horizontalScrollPolicy="off" verticalScrollPolicy="off">
-						<mx:Label x="10" y="10" text="Title:" fontSize="24"/>
-						<mx:TextInput x="73" y="10" width="546" height="32" fontSize="24" id="doctitle"/>
-						<mx:Label x="10" y="50" text="Description:" fontSize="24"/>
-						<mx:TextInput x="140" y="59" width="469" height="103" fontSize="24" id="docdescription"/>
-						<mx:Label x="10" y="172" text="File:" fontSize="24"/>
-						<mx:Button x="67" y="213" label="Add to Folder" fontSize="24"/>
-						<mx:Button x="67" y="257" label="Add to Job" fontSize="24" width="170"/>
-						<mx:TextInput x="65" y="170" height="32" width="225" fontSize="24" id="docfile"/>
-						<mx:Button x="298" y="170" label="Browse..." fontSize="20" click="newBrowseWindow(event)"/>
+					<mx:TitleWindow x="0" y="0" width="643" height="554" layout="absolute" title="Add a Document" horizontalScrollPolicy="off" verticalScrollPolicy="on" fontSize="34" fontFamily="Times New Roman" verticalAlign="middle" horizontalAlign="center" >
+						<mx:Label x="10" y="10" text="Title:" fontSize="18"/>
+						<mx:TextInput x="109" y="10" width="488" height="32" fontSize="18" id="doctitle"/>
+						<mx:Label x="10" y="50" text="Description:" fontSize="18"/>
+						<mx:TextInput x="109" y="48" width="488" height="103" fontSize="18" id="docdescription"/>
+						<mx:Label x="10" y="161" text="File:" fontSize="18"/>
+						<mx:TextInput x="109" y="159" height="32" width="225" fontSize="18" id="docfile"/>
+						<mx:Button x="342" y="170" label="Browse..." fontSize="20" click="newBrowseWindow(event)"/>
 					</mx:TitleWindow>
-					<mx:Button x="10" y="557" label="Save" fontSize="24" width="97" click = "saveDoc()"/>
-					<mx:Button x="115" y="557" label="Cancel" fontSize="24" click="cancelDoc()"/>
-					<mx:Button x="237" y="557" label="Clear All" fontSize="24" click = "clearDocFields()"/>
+					<mx:Button x="10" y="562" label="Save" fontSize="20" width="97" click = "saveDoc()"/>
+					<mx:Button x="115" y="562" label="Cancel" fontSize="20" click="cancelDoc()"/>
+					<mx:Button x="222" y="562" label="Clear All" fontSize="20" click = "clearDocFields()"/>
 				</mx:Canvas>
 			</mx:ViewStack>
 			<mx:Tree id = "docTree" x="0" y="88" width="265" height="498" doubleClickEnabled = "true" showRoot="true" labelField="@label" dragEnabled="true" dropEnabled="true" dataProvider="{myDocs}">	
@@ -222,27 +220,27 @@
 			
 		</mx:Canvas>
 		<mx:Canvas label="Positions" width="100%" height="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off" icon="@Embed(source='Pictures/briefcasepic.jpg')">
-			<mx:Button x="10" y="594" label="Add Folder" width="118" click="getFolderPopUp(event)"/>
-			<mx:Button x="136" y="594" label="Add Job" width="118" click="jobpane.selectedChild=addJob;"/>
+			<mx:Button x="0" y="589" label="Add Folder" width="124" click="getFolderPopUp(event)" fontSize="14"/>
+			<mx:Button x="141" y="589" label="Add Job" width="124" click="jobpane.selectedChild=addJob;" fontSize="14"/>
 			<mx:ViewStack x="273" y="10" id="jobpane" width="643" height="606">
 				<mx:Canvas id = "initialjob" label="Initial" width="100%" height="100%">
 				</mx:Canvas>
 				<mx:Canvas id = "addJob" label="addJob" width="100%" height="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off" >
-					<mx:TitleWindow x="0" y="0" id="jobwindow" width="663" height="626" layout="absolute" title="Add a Job" fontSize="40" fontFamily="Times New Roman" verticalAlign="middle" horizontalAlign="center">
+					<mx:TitleWindow x="0" y="0" id="jobwindow" width="643" height="554" layout="absolute" title="Add a Job" fontSize="34" horizontalScrollPolicy="off" verticalScrollPolicy="on" fontFamily="Times New Roman" verticalAlign="middle" horizontalAlign="center">
 
-						<mx:TextInput x="123" y="10" width="496" height="31" fontSize="24" id="jobcompany"/>
-						<mx:Label x="10" y="10" text="Company:" height="31" width="119" fontSize="24"/>
-						<mx:Label x="10" y="49" text="Title:" id="sizeref" fontSize="24" height="32"/>
-						<mx:TextInput x="73" y="49" width="546" height="32" fontSize="24" id="jobtitle"/>
-						<mx:TextInput x="189" y="138" width="430" height="166" fontSize="24" id="jobrequirements"/>
-						<mx:Text x="10" y="138" text="Requirements for Application:" width="171" height="65" fontSize="24" textAlign="right"/>
-						<mx:Button x="10" y="313" id = "addbutton" label="Add Another Field" fontSize="24" click="addField()"/>
-						<mx:DateField showToday = "true" x="115" y="89" height="32" fontSize="24" id="jobdeadline"/>
-						<mx:Label x="10" y="91" text="Deadline:" width="97" height="32" fontSize="24"/>
+						<mx:TextInput x="137" y="10" width="444" height="31" fontSize="18" id="jobcompany"/>
+						<mx:Label x="10" y="10" text="Company:" height="31" width="119" fontSize="18"/>
+						<mx:Label x="10" y="49" text="Title:" id="sizeref" fontSize="18" height="32"/>
+						<mx:TextInput x="137" y="49" width="444" height="32" fontSize="18" id="jobtitle"/>
+						<mx:TextInput x="137" y="138" width="444" height="112" fontSize="18" id="jobrequirements"/>
+						<mx:Text x="10" y="129" text="Requirements &#xd;for Application:" width="119" height="65" fontSize="18" textAlign="left"/>
+						<mx:Button x="10" y="258" id = "addbutton" label="Add Another Field" fontSize="20" click="addField()"/>
+						<mx:DateField showToday = "true" x="137" y="89" height="32" fontSize="18" id="jobdeadline" width="148"/>
+						<mx:Label x="10" y="91" text="Deadline:" width="97" height="32" fontSize="18"/>
 					</mx:TitleWindow>
-					<mx:Button x="10" y="557" label="Save" fontSize="24" width="97" click="saveJob()" />
-					<mx:Button x="115" y="557" label="Cancel" fontSize="24" click="cancelJob()"/>
-					<mx:Button x="237" y="557" label="Clear All" fontSize="24" click = "clearJobFields()"/>
+					<mx:Button x="10" y="562" label="Save" fontSize="20" width="97" click="saveJob()" />
+					<mx:Button x="115" y="562" label="Cancel" fontSize="20" click="cancelJob()"/>
+					<mx:Button x="222" y="562" label="Clear All" fontSize="20" click = "clearJobFields()"/>
 				</mx:Canvas>
 			</mx:ViewStack>
 			<mx:Tree id = "jobTree" x="0" y="88" width="265" height="498" doubleClickEnabled = "true" showRoot="true" labelField="@label" dragEnabled="true" dropEnabled="true" dataProvider="{myJobs}">	
@@ -364,13 +362,27 @@
 				job.requirements = jobrequirements.text;
 				job.deadline = jobdeadline.selectedDate;
 				selectedNode = jobTree.selectedItem as XML;
-				if(selectedNode == null){
+				if(selectedNode != null && !selectedNode.child("job")){
+				selectedNode = myJobs;}
+				if(selectedNode == null ){
 					selectedNode = myJobs;
+					
+									
+				
 				}
-				if(editing = true){
-					delete jobList[index];
-					delete myJobs.child
-				}
+
+//				if(editing == true){
+//				 	for (var i:int = 0; i< myJobs.length(); ++i)
+//					{
+//						
+//						if(myJobs.item[i].attribute("label") == selectedNode.attribute("label"))
+//					{
+//						delete myJobs.item[i];
+//						trace("hello")
+//					}
+//					}
+//					trace(myJobs);
+//				}
 				selectedNode.appendChild(<job id = {job.company} label = {job.company}/>);
 				jobList.push(job);
 				jobcompany.text = "";
@@ -392,8 +404,10 @@
 				jobpane.selectedChild=addJob;
 				jobcompany.text = selectedNode.attribute("label");
 				var selectedJob:Job;
+				trace(jobcompany.text);
 				for (var i:int = 0; i < jobList.length; ++i){
 					var job:Job = jobList[i];
+					
 					if(job.company == jobcompany.text){
 						selectedJob = job;
 						index = jobList.indexOf(job);
