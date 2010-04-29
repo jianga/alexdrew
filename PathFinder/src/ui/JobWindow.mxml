@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="643" creationComplete="init()" height="554" title="Add a Job" fontSize="34" horizontalScrollPolicy="off" verticalScrollPolicy="on" fontFamily="Times New Roman" verticalAlign="middle" horizontalAlign="center">
-						<mx:TextInput x="161" y="8" width="452" height="31" fontSize="18" id="jobcompany"/>
-						<mx:Label x="10" y="10" text="Company:" height="31" width="119" fontSize="18"/>
-						<mx:Label x="10" y="49" text="Title:" id="sizeref" fontSize="18" height="32"/>
-						<mx:TextInput x="161" y="47" width="452" height="32" fontSize="18" id="jobtitle"/>
-						<mx:TextInput x="161" y="138" width="452" height="112" fontSize="18" id="jobrequirements"/>
-						<mx:Text x="10" y="129" text="Requirements &#xd;for Application:" width="143" height="109" fontSize="18" textAlign="left"/>
-						<mx:Button x="10" y="258" id = "addbutton" label="Add Another Field" fontSize="20" click="addField()"/>
-						<mx:DateField showToday = "true" x="161" y="89" height="32" fontSize="18" id="jobdeadline" width="156"/>
-						<mx:Label x="10" y="91" text="Deadline:" width="97" height="32" fontSize="18"/>
+			<mx:TextInput x="161" y="8" width="452" height="31" fontSize="18" id="jobcompany"/>
+			<mx:Label x="10" y="10" text="Company:" height="31" width="119" fontSize="18"/>
+			<mx:Label x="10" y="49" text="Title:" id="sizeref" fontSize="18" height="32"/>
+			<mx:TextInput x="161" y="47" width="452" height="32" fontSize="18" id="jobtitle"/>
+			<mx:TextInput x="161" y="138" width="452" height="112" fontSize="18" id="jobrequirements"/>
+			<mx:Text x="10" y="129" text="Requirements &#xd;for Application:" width="143" height="109" fontSize="18" textAlign="left"/>
+			<mx:Button x="10" y="258" id = "addbutton" label="Add Another Field" fontSize="20" click="addField()"/>
+			<mx:DateField showToday = "true" x="161" y="89" height="32" fontSize="18" id="jobdeadline" width="156"/>
+			<mx:Label x="10" y="91" text="Deadline:" width="97" height="32" fontSize="18"/>
 						
 		<mx:Script>
 		<![CDATA[
