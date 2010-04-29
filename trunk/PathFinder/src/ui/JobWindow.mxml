@@ -1,4 +1,131 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="643" height="554">
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" layout="absolute" width="643" creationComplete="init()" height="554" title="Add a Job" fontSize="34" horizontalScrollPolicy="off" verticalScrollPolicy="on" fontFamily="Times New Roman" verticalAlign="middle" horizontalAlign="center">
+						<mx:TextInput x="161" y="8" width="452" height="31" fontSize="18" id="jobcompany"/>
+						<mx:Label x="10" y="10" text="Company:" height="31" width="119" fontSize="18"/>
+						<mx:Label x="10" y="49" text="Title:" id="sizeref" fontSize="18" height="32"/>
+						<mx:TextInput x="161" y="47" width="452" height="32" fontSize="18" id="jobtitle"/>
+						<mx:TextInput x="161" y="138" width="452" height="112" fontSize="18" id="jobrequirements"/>
+						<mx:Text x="10" y="129" text="Requirements &#xd;for Application:" width="143" height="109" fontSize="18" textAlign="left"/>
+						<mx:Button x="10" y="258" id = "addbutton" label="Add Another Field" fontSize="20" click="addField()"/>
+						<mx:DateField showToday = "true" x="161" y="89" height="32" fontSize="18" id="jobdeadline" width="156"/>
+						<mx:Label x="10" y="91" text="Deadline:" width="97" height="32" fontSize="18"/>
+						
+		<mx:Script>
+		<![CDATA[
+			import mx.controls.DateChooser;
+			import mx.controls.Text;
+			import mx.controls.List;
+			import mx.controls.ComboBox;
+			import model.Doc;
+			import model.Job;
+			import mx.binding.utils.BindingUtils;
+			private var dropdown:ComboBox = new ComboBox();
+			[Bindable] private var nameInput:TextInput = new TextInput();
+			public var fieldlist:Array= new Array("Interview Date","Recommendation","Recruiter Info");
+			private var OKButton:Button = new Button();
+			
+			private function init():void{
+				dropdown.dataProvider = fieldlist;
+				dropdown.styleName="myFontStyle";
+				dropdown.id="dropdown";
+	
+				OKButton.styleName="myFontStyle";
+				OKButton.label="OK";
+				OKButton.addEventListener(MouseEvent.CLICK, selectNewField);
+			}
+		
+			private function addField():void {
+				this.addChild(dropdown);
+				dropdown.x=10;
+				dropdown.y=addbutton.y;
+				addbutton.y = addbutton.y+50;
+
+				this.addChild(OKButton);
+				OKButton.x=250
+				OKButton.y=dropdown.y
+				
+				
+			}
+
+
+			private function selectNewField(event:MouseEvent):void{
+				if (dropdown.selectedItem=="Interview Date") {
+					this.removeChild(OKButton);
+					
+					var date:Label = new Label();
+					date.text="Date:";
+					date.styleName="myFontStyle";
+					this.addChild(date);	
+					date.x=150;
+				    date.y=dropdown.y;
+					var datechoose:DateField=new DateField();
+					datechoose.styleName="myFontStyle";
+					this.addChild(datechoose);
+					datechoose.x=225;
+					datechoose.y = dropdown.y;
+					addbutton.y = addbutton.y+60;
+					
+					var time:Label = new Label();
+					time.text="Time:";
+					time.styleName="myFontStyle";
+					this.addChild(time);	
+					time.x=375;
+				    time.y=dropdown.y;
+				    var Tinput:TextInput = new TextInput();
+					Tinput.styleName="myFontStyle";
+					this.addChild(Tinput);
+					Tinput.x=435;
+					Tinput.y=dropdown.y;
+				    
+				    
+				    var place:Label = new Label();
+					place.text="Place:";
+					place.styleName="myFontStyle";
+					this.addChild(place);	
+					place.x=150;
+				    place.y=dropdown.y+50;
+					var Pinput:TextInput = new TextInput();
+					Pinput.styleName="myFontStyle";
+					this.addChild(Pinput);
+					Pinput.x=225;
+					Pinput.y=dropdown.y+50;
+				    
+					var interviewdatetext:Label = new Label();
+					interviewdatetext.text="Interview:";
+					interviewdatetext.styleName="myFontStyle";
+					this.addChild(interviewdatetext);	
+					interviewdatetext.x=dropdown.x;
+					interviewdatetext.y=dropdown.y;
+					this.removeChild(dropdown);			
+				}
+				else if (dropdown.selectedItem!=" "){
+					this.removeChild(OKButton);
+					var input:TextInput = new TextInput();
+					input.styleName="myFontStyle";
+					this.addChild(input);
+					input.x=250;
+					input.y=dropdown.y;	
+					var textlabel:Label = new Label();
+					textlabel.text=dropdown.selectedItem.toString();
+					textlabel.styleName="myFontStyle";
+					this.addChild(textlabel);	
+					textlabel.x=dropdown.x;
+					textlabel.y=dropdown.y;
+					this.removeChild(dropdown);			
+				}
+				
+			}
+			
+
+
+
+			
+			
+
+			
+
+		
+		]]>
+	</mx:Script>
 	
 </mx:TitleWindow>
