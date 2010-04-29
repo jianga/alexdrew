@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" width="643" height="554" layout="absolute" title="Add a Document" horizontalScrollPolicy="off" verticalScrollPolicy="on" fontSize="34" fontFamily="Times New Roman" verticalAlign="middle" horizontalAlign="center" >
+		<mx:Label x="10" y="10" text="Title:" fontSize="18"/>
+		<mx:TextInput x="109" y="10" width="488" height="32" fontSize="18" id="doctitle"/>
+		<mx:Label x="10" y="50" text="Description:" fontSize="18"/>
+		<mx:TextInput x="109" y="48" width="488" height="103" fontSize="18" id="docdescription"/>
+		<mx:Label x="10" y="161" text="File:" fontSize="18"/>
+		<mx:TextInput x="109" y="159" height="32" width="225" fontSize="18" id="docfile"/>
+		<mx:Button x="342" y="170" label="Browse..." fontSize="20" click="newBrowseWindow(event)"/>
+		
+		<mx:Script>
+			<![CDATA[
+			
+			import mx.managers.PopUpManager
+			import mx.containers.Panel;
+			private var browserPanel:Panel = new Panel();
+			
+			private function newBrowseWindow(evt:MouseEvent):void{
+			    	PopUpManager.addPopUp(browserPanel, this, true);
+	                PopUpManager.centerPopUp(browserPanel);
+			    }
+			    
+		]]>
+		</mx:Script>
+</mx:TitleWindow>
