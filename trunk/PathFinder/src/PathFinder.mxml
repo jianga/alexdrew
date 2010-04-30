@@ -171,7 +171,7 @@
 		]]>
 	</mx:Script>
 	<mx:ViewStack x="10" y="10" id="viewstack1" width="926" height="626">
-		<mx:Canvas label="Calendar" width="100%" height="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off" icon="@Embed(source='Pictures/calpic.jpg')">
+		<mx:Canvas label="Calendar" width="100%" height="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off" icon="@Embed(source='Pictures/calpic-sm.jpg')">
 			<mx:Image x="0" y="92" width="557" height="534">
 				<mx:source>Pictures/calendar.png</mx:source>
 			</mx:Image>
@@ -204,7 +204,7 @@
 			</mx:Tree>
 			
 		</mx:Canvas>
-		<mx:Canvas label="Positions" width="100%" height="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off" icon="@Embed(source='Pictures/briefcasepic.jpg')">
+		<mx:Canvas label="Positions" width="100%" height="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off" icon="@Embed(source='Pictures/briefcasepic-jobs.jpg')">
 			<mx:Button x="0" y="589" label="Add Folder" width="124" click="getFolderPopUp(event)" fontSize="14"/>
 			<mx:Button x="141" y="589" label="Add Job" width="124" click="jobpane.selectedChild=addJob;" fontSize="14"/>
 			<mx:ViewStack x="273" y="10" id="jobpane" width="643" height="606">
