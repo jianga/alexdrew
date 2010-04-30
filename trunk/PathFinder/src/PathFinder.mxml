@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" creationComplete="init()" layout="absolute" width="948.6" height="656" horizontalScrollPolicy="off" verticalScrollPolicy="off">
+<mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:comp = "ui.*" creationComplete="init()" layout="absolute" width="948.6" height="656" horizontalScrollPolicy="off" verticalScrollPolicy="off">
 	<mx:Style>
        	.myFontStyle { 
            	fontSize: 24;
@@ -112,26 +112,17 @@
                 
                 
                 
-				dropdown.dataProvider = fieldlist;
-				dropdown.styleName="myFontStyle";
-				dropdown.id="dropdown";
 
-				OKButton.styleName="myFontStyle";
-				OKButton.label="OK";
-				OKButton.addEventListener(MouseEvent.CLICK, selectNewField);
             
 			}
 			
 			private function saveNewDoc(evt:MouseEvent):void{
-				docfile.text=fileThingy.selectedItem.toString();
+				docw.docfile.text=fileThingy.selectedItem.toString();
 				trace("saved new doc name");
 				PopUpManager.removePopUp(browserPanel);
 			}
 			
-		    private function newBrowseWindow(evt:MouseEvent):void{
-		    	PopUpManager.addPopUp(browserPanel, this, true);
-                PopUpManager.centerPopUp(browserPanel);
-		    }
+
 
 
 			private function saveFolder(evt:MouseEvent):void {
@@ -200,15 +191,9 @@
 			<mx:Canvas id = "initialdoc" label="Initial" width="100%" height="100%">
 			</mx:Canvas>
 			<mx:Canvas id = "addDoc" label="AddDoc" width="100%" height="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
-					<mx:TitleWindow x="0" y="0" width="643" height="554" layout="absolute" title="Add a Document" horizontalScrollPolicy="off" verticalScrollPolicy="on" fontSize="34" fontFamily="Times New Roman" verticalAlign="middle" horizontalAlign="center" >
-						<mx:Label x="10" y="10" text="Title:" fontSize="18"/>
-						<mx:TextInput x="109" y="10" width="488" height="32" fontSize="18" id="doctitle"/>
-						<mx:Label x="10" y="50" text="Description:" fontSize="18"/>
-						<mx:TextInput x="109" y="48" width="488" height="103" fontSize="18" id="docdescription"/>
-						<mx:Label x="10" y="161" text="File:" fontSize="18"/>
-						<mx:TextInput x="109" y="159" height="32" width="225" fontSize="18" id="docfile"/>
-						<mx:Button x="342" y="170" label="Browse..." fontSize="20" click="newBrowseWindow(event)"/>
-					</mx:TitleWindow>
+					<comp:DocWindow id = "docw" x = "0" y = "0">
+						
+					</comp:DocWindow>
 					<mx:Button x="10" y="562" label="Save" fontSize="20" width="97" click = "saveDoc()"/>
 					<mx:Button x="115" y="562" label="Cancel" fontSize="20" click="cancelDoc()"/>
 					<mx:Button x="222" y="562" label="Clear All" fontSize="20" click = "clearDocFields()"/>
@@ -226,18 +211,9 @@
 				<mx:Canvas id = "initialjob" label="Initial" width="100%" height="100%">
 				</mx:Canvas>
 				<mx:Canvas id = "addJob" label="addJob" width="100%" height="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off" >
-					<mx:TitleWindow x="0" y="0" id="jobwindow" width="643" height="554" layout="absolute" title="Add a Job" fontSize="34" horizontalScrollPolicy="off" verticalScrollPolicy="on" fontFamily="Times New Roman" verticalAlign="middle" horizontalAlign="center">
-
-						<mx:TextInput x="137" y="10" width="444" height="31" fontSize="18" id="jobcompany"/>
-						<mx:Label x="10" y="10" text="Company:" height="31" width="119" fontSize="18"/>
-						<mx:Label x="10" y="49" text="Title:" id="sizeref" fontSize="18" height="32"/>
-						<mx:TextInput x="137" y="49" width="444" height="32" fontSize="18" id="jobtitle"/>
-						<mx:TextInput x="137" y="138" width="444" height="112" fontSize="18" id="jobrequirements"/>
-						<mx:Text x="10" y="129" text="Requirements &#xd;for Application:" width="119" height="65" fontSize="18" textAlign="left"/>
-						<mx:Button x="10" y="258" id = "addbutton" label="Add Another Field" fontSize="20" click="addField()"/>
-						<mx:DateField showToday = "true" x="137" y="89" height="32" fontSize="18" id="jobdeadline" width="148"/>
-						<mx:Label x="10" y="91" text="Deadline:" width="97" height="32" fontSize="18"/>
-					</mx:TitleWindow>
+					<comp:JobWindow id = "jobw" x = "0" y = "0"/>
+						
+					
 					<mx:Button x="10" y="562" label="Save" fontSize="20" width="97" click="saveJob()" />
 					<mx:Button x="115" y="562" label="Cancel" fontSize="20" click="cancelJob()"/>
 					<mx:Button x="222" y="562" label="Clear All" fontSize="20" click = "clearJobFields()"/>
@@ -261,106 +237,36 @@
 			import mx.controls.ComboBox;
 			import model.Doc;
 			import model.Job;
+			import ui.JobWindow;
 			import mx.binding.utils.BindingUtils;
-			
-			public var fieldlist:Array= new Array("Interview Date","Recommendation","Recruiter Info");
-			
-			private function addField():void {
-				jobwindow.addChild(dropdown);
-				dropdown.x=10;
-				dropdown.y=addbutton.y;
-				addbutton.y = addbutton.y+50;
-
-				jobwindow.addChild(OKButton);
-				OKButton.x=250
-				OKButton.y=dropdown.y
-				
-				
-			}
-
-
-			private function selectNewField(event:MouseEvent):void{
-				if (dropdown.selectedItem=="Interview Date") {
-					jobwindow.removeChild(OKButton);
-					
-					var date:Label = new Label();
-					date.text="Date:";
-					date.styleName="myFontStyle";
-					jobwindow.addChild(date);	
-					date.x=150;
-				    date.y=dropdown.y;
-					var datechoose:DateField=new DateField();
-					datechoose.styleName="myFontStyle";
-					jobwindow.addChild(datechoose);
-					datechoose.x=225;
-					datechoose.y = dropdown.y;
-					addbutton.y = addbutton.y+60;
-					
-					var time:Label = new Label();
-					time.text="Time:";
-					time.styleName="myFontStyle";
-					jobwindow.addChild(time);	
-					time.x=375;
-				    time.y=dropdown.y;
-				    var Tinput:TextInput = new TextInput();
-					Tinput.styleName="myFontStyle";
-					jobwindow.addChild(Tinput);
-					Tinput.x=435;
-					Tinput.y=dropdown.y;
-				    
-				    
-				    var place:Label = new Label();
-					place.text="Place:";
-					place.styleName="myFontStyle";
-					jobwindow.addChild(place);	
-					place.x=150;
-				    place.y=dropdown.y+50;
-					var Pinput:TextInput = new TextInput();
-					Pinput.styleName="myFontStyle";
-					jobwindow.addChild(Pinput);
-					Pinput.x=225;
-					Pinput.y=dropdown.y+50;
-				    
-					var interviewdatetext:Label = new Label();
-					interviewdatetext.text="Interview:";
-					interviewdatetext.styleName="myFontStyle";
-					jobwindow.addChild(interviewdatetext);	
-					interviewdatetext.x=dropdown.x;
-					interviewdatetext.y=dropdown.y;
-					jobwindow.removeChild(dropdown);			
-				}
-				else if (dropdown.selectedItem!=" "){
-					jobwindow.removeChild(OKButton);
-					var input:TextInput = new TextInput();
-					input.styleName="myFontStyle";
-					jobwindow.addChild(input);
-					input.x=250;
-					input.y=dropdown.y;	
-					var textlabel:Label = new Label();
-					textlabel.text=dropdown.selectedItem.toString();
-					textlabel.styleName="myFontStyle";
-					jobwindow.addChild(textlabel);	
-					textlabel.x=dropdown.x;
-					textlabel.y=dropdown.y;
-					jobwindow.removeChild(dropdown);			
-				}
-				
-			}
 			
 
 			[Bindable] private var selectedNode:XML;
 			[Bindable] private var jobList:Array = new Array();
-			[Bindable] private var docList:Array = new Array();
 			[Bindable] private var editing:Boolean = false;
 			[Bindable] private var index:int;
+			
+			private function clearDocFields():void {
+				docw.doctitle.text = "";
+				docw.docdescription.text = "";
+				docw.docfile.text = "";
+			}
+			
 
+			
+			private function cancelDoc():void {
+				documentpane.selectedChild=initialdoc;
+				docw.doctitle.text = "";
+				docw.docdescription.text = "";
+				docw.docfile.text = "";
+			}
 			private function saveJob():void {
 				jobpane.selectedChild=initialjob;
 				var job:Job = new Job();
-				job.company = jobcompany.text;
-				job.title = jobtitle.text;
-				job.requirements = jobrequirements.text;
-				job.deadline = jobdeadline.selectedDate;
+				job.company = jobw.jobcompany.text;
+				job.title = jobw.jobtitle.text;
+				job.requirements = jobw.jobrequirements.text;
+				job.deadline = jobw.jobdeadline.selectedDate;
 				selectedNode = jobTree.selectedItem as XML;
 				if(selectedNode != null && !selectedNode.child("job")){
 				selectedNode = myJobs;}
@@ -385,10 +291,10 @@
 //				}
 				selectedNode.appendChild(<job id = {job.company} label = {job.company}/>);
 				jobList.push(job);
-				jobcompany.text = "";
-				jobtitle.text = "";
-				jobrequirements.text = "";
-				jobdeadline.text = "";
+				jobw.jobcompany.text = "";
+				jobw.jobtitle.text = "";
+				jobw.jobrequirements.text = "";
+				jobw.jobdeadline.text = "";
 				
 				editing = false;
             	jobTree.addEventListener(MouseEvent.DOUBLE_CLICK, doubleClickJob);
@@ -402,94 +308,80 @@
 				selectedNode = jobTree.selectedItem as XML;
 				var parent:XML = selectedNode.parent();
 				jobpane.selectedChild=addJob;
-				jobcompany.text = selectedNode.attribute("label");
+				jobw.jobcompany.text = selectedNode.attribute("label");
 				var selectedJob:Job;
-				trace(jobcompany.text);
+				trace(jobw.jobcompany.text);
 				for (var i:int = 0; i < jobList.length; ++i){
 					var job:Job = jobList[i];
 					
-					if(job.company == jobcompany.text){
+					if(job.company == jobw.jobcompany.text){
 						selectedJob = job;
 						index = jobList.indexOf(job);
 					}
 				}	
 				
-				jobcompany.text = selectedJob.company;
-				jobtitle.text = selectedJob.title;
-				jobrequirements.text = selectedJob.requirements;
-				jobdeadline.selectedDate = selectedJob.deadline;
-				
-				
-				
-			}
-			
-			private function doubleClickDoc(evt:MouseEvent):void{
-				
-				
-				selectedNode = docTree.selectedItem as XML;
-				documentpane.selectedChild=addDoc;
-				doctitle.text = selectedNode.attribute("label");
-				var selectedDoc:Doc;
-				for (var i:int = 0; i < docList.length; ++i){
-					var doc:Doc = docList[i];
-					if(doc.title == doctitle.text){
-						selectedDoc = doc;
-					}
-				}	
-				
-				doctitle.text = selectedDoc.title;
-				docdescription.text = selectedDoc.description;
-				docfile.text = selectedDoc.file;
-				
-			}
-			
-			private function saveDoc():void {
-				documentpane.selectedChild=initialdoc;
-				var doc:Doc = new Doc();
-				doc.title = doctitle.text;
-				doc.description = docdescription.text;
-				doc.file = docfile.text;
-				selectedNode = docTree.selectedItem as XML;
-				if(selectedNode == null){
-					selectedNode = myDocs;
-				}
-				selectedNode.appendChild(<doc label = {doc.title}/>);
-				docList.push(doc);
-				doctitle.text = "";
-				docdescription.text = "";
-				docfile.text = "";
-				
-				docTree.addEventListener(MouseEvent.DOUBLE_CLICK, doubleClickDoc);
-			}
-			
-			private function clearDocFields():void {
-				doctitle.text = "";
-				docdescription.text = "";
-				docfile.text = "";
-			}
-			
-			private function clearJobFields():void {
-				jobcompany.text = "";
-				jobtitle.text = "";
-				jobrequirements.text = "";
-				jobdeadline.text = "";
-			}
-			
-			private function cancelDoc():void {
-				documentpane.selectedChild=initialdoc;
-				doctitle.text = "";
-				docdescription.text = "";
-				docfile.text = "";
+				jobw.jobcompany.text = selectedJob.company;
+				jobw.jobtitle.text = selectedJob.title;
+				jobw.jobrequirements.text = selectedJob.requirements;
+				jobw.jobdeadline.selectedDate = selectedJob.deadline;
+					
 			}
 			
 			private function cancelJob():void {
 				jobpane.selectedChild=initialjob;
-				jobcompany.text = "";
-				jobtitle.text = "";
-				jobrequirements.text = "";
-				jobdeadline.text = "";
+				jobw.jobcompany.text = "";
+				jobw.jobtitle.text = "";
+				jobw.jobrequirements.text = "";
+				jobw.jobdeadline.text = "";
 			}
 		
+			private function clearJobFields():void {
+				jobw.jobcompany.text = "";
+				jobw.jobtitle.text = "";
+				jobw.jobrequirements.text = "";
+				jobw.jobdeadline.text = "";
+			}
+			
+			[Bindable] private var docList:Array = new Array();
+		
+			private function saveDoc():void {
+                   documentpane.selectedChild=initialdoc;
+                   var doc:Doc = new Doc();
+                   doc.title = docw.doctitle.text;
+                   doc.description = docw.docdescription.text;
+                   doc.file = docw.docfile.text;
+                   selectedNode = docTree.selectedItem as XML;
+                   if(selectedNode == null){
+                           selectedNode = myDocs;
+                   }
+                   selectedNode.appendChild(<doc label = {doc.title}/>);
+                   docList.push(doc);
+                   docw.doctitle.text = "";
+                   docw.docdescription.text = "";
+                   docw.docfile.text = "";
+                   
+                   docTree.addEventListener(MouseEvent.DOUBLE_CLICK, doubleClickDoc);
+            }
+            
+            private function doubleClickDoc(evt:MouseEvent):void{
+                               
+                               
+                       selectedNode = docTree.selectedItem as XML;
+                       documentpane.selectedChild=addDoc;
+                       docw.doctitle.text = selectedNode.attribute("label");
+                       var selectedDoc:Doc;
+                       for (var i:int = 0; i < docList.length; ++i){
+                               var doc:Doc = docList[i];
+                               if(doc.title == docw.doctitle.text){
+                                       selectedDoc = doc;
+                               }
+                       }        
+                       
+                       docw.doctitle.text = selectedDoc.title;
+                       docw.docdescription.text = selectedDoc.description;
+                       docw.docfile.text = selectedDoc.file;
+                               
+             }
 		]]>
 	</mx:Script>
 	
