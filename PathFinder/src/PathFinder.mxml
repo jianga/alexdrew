@@ -27,6 +27,9 @@
 			private var browserPanel:Panel = new Panel();
 			private var newFolderPanel:Panel;
 			
+			private var docMenu:ContextMenu = new ContextMenu();
+            private var jobMenu:ContextMenu = new ContextMenu(); 
+			
 			[Bindable] private var nameInput:TextInput = new TextInput();
 			private var openSequence:Array = [];
 			[Bindable] public var myJobs:XML =
@@ -50,6 +53,26 @@
 
 			
 			private function init():void{
+				var docmenuView:ContextMenuItem = new ContextMenuItem("View");
+				docmenuView.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT,doubleClickDoc); 
+				docMenu.addItem(docmenuView);
+				var docmenuEdit:ContextMenuItem = new ContextMenuItem("Edit");
+				docmenuEdit.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT,doubleClickDoc); 
+            	docMenu.addItem(docmenuEdit);
+            	var docmenuDelete:ContextMenuItem = new ContextMenuItem("Delete");
+				docmenuDelete.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT,deleteDoc); 
+            	docMenu.addItem(docmenuDelete);
+				
+				var jobmenuView:ContextMenuItem = new ContextMenuItem("View");
+				jobmenuView.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT,singleClickJob); 
+				jobMenu.addItem(jobmenuView);
+				var jobmenuEdit:ContextMenuItem = new ContextMenuItem("Edit");
+				jobmenuEdit.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT,doubleClickJob); 
+            	jobMenu.addItem(jobmenuEdit);
+            	var jobmenuDelete:ContextMenuItem = new ContextMenuItem("Delete");
+				jobmenuDelete.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT,deleteJob); 
+            	jobMenu.addItem(jobmenuDelete);
+			
 				var s:Spacer = new Spacer();
 				newFolderPanel=new Panel();
 				newFolderPanel.title="New Folder";
@@ -79,17 +102,8 @@
                 newFolderPanel.height = 140;
                 newFolderPanel.addChild(vb);
                 newFolderPanel.addChild(cb);
-                
-				
-                
-                
-                
-
-            
+                                        
 			}
-
-
-
 
 			private function saveFolder(evt:MouseEvent):void {
 				
@@ -161,7 +175,7 @@
 					<mx:Button x="222" y="562" label="Clear All" fontSize="20" click = "clearDocFields()"/>
 				</mx:Canvas>
 			</mx:ViewStack>
-			<mx:Tree id = "docTree" x="0" y="88" width="265" height="498" doubleClickEnabled = "true" showRoot="true" labelField="@label" dragEnabled="true" dropEnabled="true" dataProvider="{myDocs}">	
+			<mx:Tree id = "docTree" x="0" y="88" width="265" height="498" doubleClickEnabled = "true" showRoot="true" labelField="@label" dragEnabled="true" contextMenu="docMenu" rightClick = "docMenu.display(this.stage, this.mouseX, this.mouseY)" dropEnabled="true" dataProvider="{myDocs}">	
 
 			</mx:Tree>
 			
@@ -296,8 +310,14 @@
 			
 			private function singleClickJob(evt:MouseEvent):void{
 				
-				jobpane.selectedChild = viewJob;
+				//jobpane.selectedChild = viewJob;
 					
+			}
+			
+			private function deleteJob():void{
+				if (jobpane.selectedChild != null) {					
+					jobpane.removeChild(jobpane.selectedChild);
+				}
 			}
 			
 			private function cancelJob():void {
@@ -354,7 +374,15 @@
                        docw.docdescription.text = selectedDoc.description;
                        docw.docfile.text = selectedDoc.file;
                                
-             }
+             }           
+             
+			
+			private function deleteDoc():void{
+				if (documentpane.selectedChild != null) {					
+					documentpane.removeChild(documentpane.selectedChild);
+				}
+			}
+             
 		]]>
 	</mx:Script>
 	
