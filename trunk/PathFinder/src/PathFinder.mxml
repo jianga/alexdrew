@@ -242,8 +242,9 @@
 				docw.docfile.text = "";
 			}
 			private function saveJob():void {
+				
 				jobpane.selectedChild=initialjob;
-				var job:Job = new Job();
+				var job:Job = new Job(jobw);
 				job.company = jobw.jobcompany.text;
 				job.title = jobw.jobtitle.text;
 				job.requirements = jobw.jobrequirements.text;
@@ -279,6 +280,7 @@
 				
 				editing = false;
             	jobTree.addEventListener(MouseEvent.DOUBLE_CLICK, doubleClickJob);
+            	jobTree.addEventListener(MouseEvent.CLICK, singleClickJob);
 				
 			}
 			
@@ -309,8 +311,9 @@
 			}
 			
 			private function singleClickJob(evt:MouseEvent):void{
-				
-				//jobpane.selectedChild = viewJob;
+
+				jobpane.selectedChild = view;
+
 					
 			}
 			
