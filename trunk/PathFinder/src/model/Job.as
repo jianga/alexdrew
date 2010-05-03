@@ -1,18 +1,33 @@
 package model
 {
+	import mx.skins.halo.TitleBackground;
+	
 	public class Job
 	{
 		import ui.JobWindow;
+		import mx.containers.TitleWindow;
+		import mx.containers.Canvas;
 		
 		private var _deadline:Date;
 		private var _company:String;
 		private var _title:String;
 		private var _requirements:Array;
 		public var jobWindow:JobWindow;
+
 		
 		public function Job(wind:JobWindow)
 		{
 			this.jobWindow = wind;
+			this.jobWindow.title = "Edit Job";
+
+		}
+		
+		public function viewText():String{
+			var text:String;
+			
+			text = "Company: " + this._company + "\n" + "Title: " + this._title + "\n" +  "Deadline: " + this._deadline + "\n" + "Requirements: " + this._requirements;
+			return text;
+		
 		}
 		
 		public function set deadline(date:Date):void{
