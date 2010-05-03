@@ -25,8 +25,8 @@
             private var OKButton:Button = new Button();
 			private var dropdown:ComboBox = new ComboBox();
 			private var browserPanel:Panel = new Panel();
-	
 			private var newFolderPanel:Panel;
+			
 			[Bindable] private var nameInput:TextInput = new TextInput();
 			private var openSequence:Array = [];
 			[Bindable] public var myJobs:XML =
@@ -47,17 +47,16 @@
 			public var briefcasepicture:Class;
 			[Embed(source="Pictures/calendar.jpg")]
 			public var folderpicture:Class;
-            public var fileThingy:List = new List();
+
 			
 			private function init():void{
-				
+				var s:Spacer = new Spacer();
 				newFolderPanel=new Panel();
 				newFolderPanel.title="New Folder";
 				newFolderPanel.visible=true;
 				var vb:VBox = new VBox();
                 var nameLabel:Label = new Label();;
                 var cb:ControlBar = new ControlBar();
-                var s:Spacer = new Spacer();
                 var saveButton:Button = new Button();
                 var cancelButton:Button = new Button();
                 s.percentWidth = 100;
@@ -81,47 +80,14 @@
                 newFolderPanel.addChild(vb);
                 newFolderPanel.addChild(cb);
                 
-				browserPanel.width = 300;
-				browserPanel.height = 200;
-				browserPanel.title="Select Document to Add...";
-				browserPanel.visible=true;
-				var cb2:ControlBar = new ControlBar();
-				var s2:Spacer = new Spacer();
-                s2.percentWidth = 100;				
-				var selectButton:Button=new Button();
-				selectButton.label = "Choose";
-                selectButton.addEventListener(MouseEvent.CLICK, saveNewDoc);
-                var cancelmeButton:Button = new Button();
-                cancelmeButton.label = "Cancel";
-                cancelmeButton.addEventListener(MouseEvent.CLICK, closePopUpB);   
-                var options:Array = new Array("Resume");
-                fileThingy.dataProvider = options;      
-                var vb2:VBox = new VBox();  
-                vb2.setStyle("paddingBottom", 5);
-                vb2.setStyle("paddingLeft", 5);
-                vb2.setStyle("paddingRight", 5);
-                vb2.setStyle("paddingTop", 5);
-                vb2.addChild(fileThingy);
-                fileThingy.height=100;
-                fileThingy.width=200;
-                cb2.addChild(s);
-                cb2.addChild(selectButton);
-                cb2.addChild(cancelmeButton);
-                browserPanel.addChild(vb2);
-                browserPanel.addChild(cb2);
+				
                 
                 
                 
 
             
 			}
-			
-			private function saveNewDoc(evt:MouseEvent):void{
-				docw.docfile.text=fileThingy.selectedItem.toString();
-				trace("saved new doc name");
-				PopUpManager.removePopUp(browserPanel);
-			}
-			
+
 
 
 
@@ -159,10 +125,6 @@
                 nameInput.text = "";
             }
             
-            private function closePopUpB(evt:MouseEvent):void {
-            	trace("closing browse window");
-                PopUpManager.removePopUp(browserPanel);
-            }
 			
 			private function getFolderPopUp(event:MouseEvent):void{
 				PopUpManager.addPopUp(newFolderPanel, this, true);
@@ -217,6 +179,11 @@
 					<mx:Button x="10" y="562" label="Save" fontSize="20" width="97" click="saveJob()" />
 					<mx:Button x="115" y="562" label="Cancel" fontSize="20" click="cancelJob()"/>
 					<mx:Button x="222" y="562" label="Clear All" fontSize="20" click = "clearJobFields()"/>
+				</mx:Canvas>
+				<mx:Canvas label="viewJob" width="100%" height="100%" id="view">
+					<mx:TitleWindow x="10" y="10" width="623" height="586" layout="absolute" title="View Job" fontSize="34" fontFamily="Times New Roman">
+						<mx:Text x="10" y="10" width="583" height="501" id="viewText" enabled="true"/>
+					</mx:TitleWindow>
 				</mx:Canvas>
 			</mx:ViewStack>
 			<mx:Tree id = "jobTree" x="0" y="88" width="265" height="498" doubleClickEnabled = "true" showRoot="true" labelField="@label" dragEnabled="true" dropEnabled="true" dataProvider="{myJobs}">	
@@ -324,6 +291,12 @@
 				jobw.jobtitle.text = selectedJob.title;
 				jobw.jobrequirements.text = selectedJob.requirements;
 				jobw.jobdeadline.selectedDate = selectedJob.deadline;
+					
+			}
+			
+			private function singleClickJob(evt:MouseEvent):void{
+				
+				jobpane.selectedChild = viewJob;
 					
 			}
 			

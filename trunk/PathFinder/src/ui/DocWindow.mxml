@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" width="643" height="554" layout="absolute" title="Add a Document" horizontalScrollPolicy="off" verticalScrollPolicy="on" fontSize="34" fontFamily="Times New Roman" verticalAlign="middle" horizontalAlign="center" >
+<mx:TitleWindow xmlns:mx="http://www.adobe.com/2006/mxml" width="643" height="554" creationComplete="init()" layout="absolute" title="Add a Document" horizontalScrollPolicy="off" verticalScrollPolicy="on" fontSize="34" fontFamily="Times New Roman" verticalAlign="middle" horizontalAlign="center" >
 		<mx:Label x="10" y="10" text="Title:" fontSize="18"/>
 		<mx:TextInput x="109" y="10" width="488" height="32" fontSize="18" id="doctitle"/>
 		<mx:Label x="10" y="50" text="Description:" fontSize="18"/>
@@ -13,13 +13,66 @@
 			
 			import mx.managers.PopUpManager
 			import mx.containers.Panel;
+			import mx.containers.ControlBar;
+			import mx.controls.Spacer;
+			import mx.containers.VBox;
+			import mx.controls.List;
+			
+			public var fileThingy:List = new List();
 			private var browserPanel:Panel = new Panel();
+			
+					
+		
 			
 			private function newBrowseWindow(evt:MouseEvent):void{
 			    	PopUpManager.addPopUp(browserPanel, this, true);
 	                PopUpManager.centerPopUp(browserPanel);
 			    }
 			    
+			private function init():void{
+				var s:Spacer = new Spacer();
+				browserPanel.width = 300;
+				browserPanel.height = 200;
+				browserPanel.title="Select Document to Add...";
+				browserPanel.visible=true;
+				var cb2:ControlBar = new ControlBar();
+				var s2:Spacer = new Spacer();
+                s2.percentWidth = 100;				
+				var selectButton:Button=new Button();
+				selectButton.label = "Choose";
+                selectButton.addEventListener(MouseEvent.CLICK, saveNewDoc);
+                var cancelmeButton:Button = new Button();
+                cancelmeButton.label = "Cancel";
+                cancelmeButton.addEventListener(MouseEvent.CLICK, closePopUpB);   
+                var options:Array = new Array("Resume");
+                fileThingy.dataProvider = options;      
+                var vb2:VBox = new VBox();  
+                vb2.setStyle("paddingBottom", 5);
+                vb2.setStyle("paddingLeft", 5);
+                vb2.setStyle("paddingRight", 5);
+                vb2.setStyle("paddingTop", 5);
+                vb2.addChild(fileThingy);
+                fileThingy.height=100;
+                fileThingy.width=200;
+                cb2.addChild(s);
+                cb2.addChild(selectButton);
+                cb2.addChild(cancelmeButton);
+                browserPanel.addChild(vb2);
+                browserPanel.addChild(cb2);
+			}
+			    
+			    			
+			private function saveNewDoc(evt:MouseEvent):void{
+				this.docfile.text=fileThingy.selectedItem.toString();
+				trace("saved new doc name");
+				PopUpManager.removePopUp(browserPanel);
+			}
+			
+
+			private function closePopUpB(evt:MouseEvent):void {
+            	trace("closing browse window");
+                PopUpManager.removePopUp(browserPanel);
+            }
 		]]>
 		</mx:Script>
 </mx:TitleWindow>
