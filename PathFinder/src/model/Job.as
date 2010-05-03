@@ -8,16 +8,22 @@ package model
 		private var _company:String;
 		private var _title:String;
 		private var _requirements:Array;
-		public var jobWindow:JobWindow = new JobWindow();
+		public var jobWindow:JobWindow;
 		
-		public function Job()
+		public function Job(wind:JobWindow)
 		{
-			
+			this.jobWindow = wind;
 		}
 		
 		public function set deadline(date:Date):void{
 			this._deadline = date;
-			jobWindow.jobdeadline.text = date.toDateString();
+
+			if(date == null){
+				
+			}
+			else{
+				jobWindow.jobdeadline.text = date.toDateString();
+			}
 		}
 		
 		public function set company(com:String):void{

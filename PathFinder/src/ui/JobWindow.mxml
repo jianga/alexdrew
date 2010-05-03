@@ -23,7 +23,7 @@
 			[Bindable] private var nameInput:TextInput = new TextInput();
 			public var fieldlist:Array= new Array("Interview Date","Recommendation","Recruiter Info");
 			private var OKButton:Button = new Button();
-		
+			
 			
 			private function init():void{
 				dropdown.dataProvider = fieldlist;
