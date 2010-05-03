@@ -6,7 +6,7 @@
 			<mx:TextInput x="161" y="47" width="452" height="32" fontSize="18" id="jobtitle"/>
 			<mx:TextInput x="161" y="138" width="452" height="112" fontSize="18" id="jobrequirements"/>
 			<mx:Text x="10" y="129" text="Requirements &#xd;for Application:" width="143" height="109" fontSize="18" textAlign="left"/>
-			<mx:Button x="10" y="258" id = "addbutton" label="Add Another Field" fontSize="20" click="addField()"/>
+			<mx:Button x="10" y="258" id = "addbutton" label="Add Another Field" fontSize="18" click="addField()"/>
 			<mx:DateField showToday = "true" x="161" y="89" height="32" fontSize="18" id="jobdeadline" width="156"/>
 			<mx:Label x="10" y="91" text="Deadline:" width="97" height="32" fontSize="18"/>
 						
@@ -21,7 +21,7 @@
 			import mx.binding.utils.BindingUtils;
 			private var dropdown:ComboBox = new ComboBox();
 			[Bindable] private var nameInput:TextInput = new TextInput();
-			public var fieldlist:Array= new Array("Interview Date","Recommendation","Recruiter Info");
+			public var fieldlist:Array= new Array("Interview Date","Recommendation","Recruiter Info", "Notes");
 			private var OKButton:Button = new Button();
 			
 			
