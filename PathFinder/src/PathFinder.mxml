@@ -3,7 +3,7 @@
 <mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:comp = "ui.*" creationComplete="init()" layout="absolute" width="948.6" height="656" horizontalScrollPolicy="off" verticalScrollPolicy="off">
 	<mx:Style>
        	.myFontStyle { 
-           	fontSize: 24;
+           	fontSize: 18;
       	}
     </mx:Style>
 	
