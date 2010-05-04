@@ -229,6 +229,10 @@
 			[Bindable] private var index:int;
 			[Bindable] private var jobText:String;
 			
+			private var interval1:Number=0;
+			private var interval2:Number=0;
+
+			
 			private function clearDocFields():void {
 				docw.doctitle.text = "";
 				docw.docdescription.text = "";
@@ -349,9 +353,15 @@
 					viewText.text = jobText;
 				}
 
-				
+				clearInterval(interval1);
+				interval1 = setInterval(deferredItemClickHandler,300);
+
 			}
 			
+			private function deferredItemClickHandler():void{			
+				clearInterval(interval1);
+			}
+
 			private function deleteJob():void{
 				if (jobpane.selectedChild != null) {					
 					jobpane.removeChild(jobpane.selectedChild);
