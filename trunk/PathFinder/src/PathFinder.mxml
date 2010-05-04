@@ -163,7 +163,7 @@
 		</mx:Canvas>
 		<mx:Canvas label="Documents" width="120%" height="100%" horizontalScrollPolicy="off" visible="true" verticalScrollPolicy="off" icon="@Embed(source='Pictures/docpicturesm.jpg')">
 			<mx:Button x="0" y="589" label="Add Folder" width="124" click="getFolderPopUp(event)" fontSize="14"/>
-			<mx:Button x="141" y="589" label="Add Doc" width="124" click="documentpane.selectedChild=addDoc;" fontSize="14"/>
+			<mx:Button x="141" y="589" label="Add Doc" width="124" click="addDocagain()" fontSize="14"/>
 			<mx:ViewStack x="273" y="10" id="documentpane" width="643" height="606">
 			<mx:Canvas id = "initialdoc" label="Initial" width="100%" height="100%">
 			</mx:Canvas>
@@ -231,7 +231,6 @@
 			[Bindable] private var jobText:String;
 			
 			private var interval1:Number=0;
-			private var interval2:Number=0;
 
 			
 			private function clearDocFields():void {
@@ -286,7 +285,7 @@
 				
 				editing = false;
             	jobTree.addEventListener(MouseEvent.DOUBLE_CLICK, doubleClickJob);
-            	jobTree.addEventListener(MouseEvent.CLICK, singleClickJob);
+            	jobTree.addEventListener(MouseEvent.CLICK, clickHandler);
             	jobTree.expandItem(selectedNode, true);
 				
 			}
@@ -296,11 +295,26 @@
 				if(jobw == null){}
 				else{
 					jobw.title = "Add Job";
+					jobw.jobcompany.text = "";
+					jobw.jobtitle.text = "";
+					jobw.jobrequirements.text = "";
+					jobw.jobdeadline.text = "";
 				}
 				
 			}
 			
+			private function addDocagain():void{
+				documentpane.selectedChild=addDoc; 
+				if(docw == null){}
+				else{
+					docw.title = "Add Doc";
+				}
+				
+			}
+
+			
 			private function doubleClickJob(evt:MouseEvent):void{	
+				clearInterval(interval1);
 				editing = true;
 				selectedNode = jobTree.selectedItem as XML;
 
@@ -325,7 +339,7 @@
 				}
 				
 
-
+				
 //				jobw.jobcompany.text = selectedJob.company;
 //				jobw.jobtitle.text = selectedJob.title;
 //				jobw.jobrequirements.text = selectedJob.requirements;
@@ -333,9 +347,9 @@
 					
 			}
 			
-			private function singleClickJob(evt:MouseEvent):void{
+			private function singleClickJob():void{
 				clearInterval(interval1);
-				interval1 = setInterval(deferredItemClickHandler,300);
+
 				selectedNode = jobTree.selectedItem as XML;
 				if (selectedNode.localName()=="job"){
 				
@@ -365,12 +379,19 @@
 					jobTree.expandItem(selectedNode, true);
 				}
 				
-					
+				
+
+				clearInterval(interval1);
+
+
 			}
 
+
 			
-			private function deferredItemClickHandler():void{			
+			private function clickHandler(event:MouseEvent):void{			
 				clearInterval(interval1);
+				interval1 = setInterval(singleClickJob, 300);
+
 			}
 
 			private function deleteJob():void{
