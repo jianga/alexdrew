@@ -182,7 +182,7 @@
 		</mx:Canvas>
 		<mx:Canvas label="Positions" width="100%" height="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off" icon="@Embed(source='Pictures/briefcasepic-jobs.jpg')">
 			<mx:Button x="0" y="589" label="Add Folder" width="124" click="getFolderPopUp(event)" fontSize="14"/>
-			<mx:Button x="141" y="589" label="Add Job" width="124" click="jobpane.selectedChild=addJob;" fontSize="14"/>
+			<mx:Button x="141" y="589" label="Add Job" width="124" click="addJobagain()" fontSize="14"/>
 			<mx:ViewStack x="273" y="10" id="jobpane" width="643" height="606">
 				<mx:Canvas id = "initialjob" label="Initial" width="100%" height="100%">
 				</mx:Canvas>
@@ -190,14 +190,15 @@
 					<comp:JobWindow id = "jobw" x = "0" y = "0"/>
 						
 					
-					<mx:Button x="10" y="562" label="Save" fontSize="20" width="97" click="saveJob()" />
-					<mx:Button x="115" y="562" label="Cancel" fontSize="20" click="cancelJob()"/>
-					<mx:Button x="222" y="562" label="Clear All" fontSize="20" click = "clearJobFields()"/>
+					<mx:Button x="10" y="562" label="Save" fontSize="20" width="97" click="saveJob()"  styleName="myFontStyle"/>
+					<mx:Button x="115" y="562" label="Cancel" fontSize="20" click="cancelJob()" styleName="myFontStyle"/>
+					<mx:Button x="222" y="562" label="Clear All" fontSize="20" click = "clearJobFields()" styleName="myFontStyle"/>
 				</mx:Canvas>
 				<mx:Canvas id = "view" label="viewJob" width="100%" height="100%" >
-					<mx:TitleWindow id = "viewWind" x="10" y="10" width="623" height="586" layout="absolute" title="View Job" fontSize="34" fontFamily="Times New Roman">
+					<mx:TitleWindow id = "viewWind" x="0" y="0" width="633" height="554" layout="absolute" title="View Job" fontSize="34" fontFamily="Times New Roman">
 						<mx:Text id = "viewText" x="10" y="10" width="583" height="501" text = "doot" styleName = "myFontStyle"/>
 					</mx:TitleWindow>
+					<mx:Button x="10" y="562" label="Edit" fontSize="20" click = "editJob()"/>
 				</mx:Canvas>
 			</mx:ViewStack>
 			<mx:Tree id = "jobTree" x="0" y="88" width="265" height="498" doubleClickEnabled = "true" showRoot="true" labelField="@label" dragEnabled="true" dropEnabled="true" dataProvider="{myJobs}">	
@@ -250,14 +251,12 @@
 				job.title = jobw.jobtitle.text;
 				job.requirements = jobw.jobrequirements.text;
 				job.deadline = jobw.jobdeadline.selectedDate;
-				jobText = job.viewText();
 				selectedNode = jobTree.selectedItem as XML;
 				if(selectedNode != null && !selectedNode.child("job")){
-				selectedNode = myJobs;}
-				if(selectedNode == null ){
 					selectedNode = myJobs;
-					
-									
+				}
+				if(selectedNode == null ){
+					selectedNode = myJobs;				
 				
 				}
 
@@ -286,16 +285,15 @@
 				
 			}
 			
-						
-			private function doubleClickJob(evt:MouseEvent):void{
+			private function addJobagain():void{
+				jobpane.selectedChild=addJob; 
+				if(jobw == null){}
+				else{
+					jobw.title = "Add Job";
+				}
 				
-				editing = true;
-				selectedNode = jobTree.selectedItem as XML;
-				var parent:XML = selectedNode.parent();
-				jobpane.selectedChild=addJob;
-				jobw.jobcompany.text = selectedNode.attribute("label");
-				var selectedJob:Job;
-				trace(jobw.jobcompany.text);
+			}
+			private function doubleClickJob(evt:MouseEvent):void{
 				for (var i:int = 0; i < jobList.length; ++i){
 					var job:Job = jobList[i];
 					
@@ -304,16 +302,40 @@
 						index = jobList.indexOf(job);
 					}
 				}	
-				
-				jobw.jobcompany.text = selectedJob.company;
-				jobw.jobtitle.text = selectedJob.title;
-				jobw.jobrequirements.text = selectedJob.requirements;
-				jobw.jobdeadline.selectedDate = selectedJob.deadline;
+				editing = true;
+				selectedNode = jobTree.selectedItem as XML;
+				var parent:XML = selectedNode.parent();
+				jobw = selectedJob.jobWindow;
+				jobpane.selectedChild=addJob;
+				jobw.jobcompany.text = selectedNode.attribute("label");
+				var selectedJob:Job;
+				trace(jobw.jobcompany.text);
+
+
+//				jobw.jobcompany.text = selectedJob.company;
+//				jobw.jobtitle.text = selectedJob.title;
+//				jobw.jobrequirements.text = selectedJob.requirements;
+//				jobw.jobdeadline.selectedDate = selectedJob.deadline;
 					
 			}
 			
 			private function singleClickJob(evt:MouseEvent):void{
-
+				
+				selectedNode = jobTree.selectedItem as XML;
+				var parent:XML = selectedNode.parent();
+				jobpane.selectedChild=addJob;
+				jobw.jobcompany.text = selectedNode.attribute("label");
+				var selectedJob:Job;
+				for (var i:int = 0; i < jobList.length; ++i){
+					var job:Job = jobList[i];
+					
+					if(job.company == jobw.jobcompany.text){
+						selectedJob = job;
+						index = jobList.indexOf(job);
+					}
+				}
+			
+				jobText = selectedJob.viewText();
 				jobpane.selectedChild = view;
 
 				trace(view);
@@ -355,7 +377,7 @@
 		
 			private function saveDoc():void {
                    documentpane.selectedChild=initialdoc;
-                   var doc:Doc = new Doc();
+                   var doc:Doc = new Doc(docw);
                    doc.title = docw.doctitle.text;
                    doc.description = docw.docdescription.text;
                    doc.file = docw.docfile.text;
@@ -390,7 +412,33 @@
                        docw.docdescription.text = selectedDoc.description;
                        docw.docfile.text = selectedDoc.file;
                                
-             }           
+             }  
+             
+             private function editJob():void{
+                               
+                               
+                editing = true;
+				selectedNode = jobTree.selectedItem as XML;
+				var parent:XML = selectedNode.parent();
+				jobpane.selectedChild=addJob;
+				jobw.jobcompany.text = selectedNode.attribute("label");
+				var selectedJob:Job;
+				trace(jobw.jobcompany.text);
+				for (var i:int = 0; i < jobList.length; ++i){
+					var job:Job = jobList[i];
+					
+					if(job.company == jobw.jobcompany.text){
+						selectedJob = job;
+						index = jobList.indexOf(job);
+					}
+				}	
+				
+				jobw.jobcompany.text = selectedJob.company;
+				jobw.jobtitle.text = selectedJob.title;
+				jobw.jobrequirements.text = selectedJob.requirements;
+				jobw.jobdeadline.selectedDate = selectedJob.deadline;
+                               
+             }          
              
 			
 			private function deleteDoc():void{
