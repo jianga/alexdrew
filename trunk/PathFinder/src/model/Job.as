@@ -8,10 +8,11 @@ package model
 		import mx.containers.TitleWindow;
 		import mx.containers.Canvas;
 		
-		private var _deadline:Date;
+		private var _deadline:String;
+		private var _date:Date;
 		private var _company:String;
 		private var _title:String;
-		private var _requirements:Array;
+		private var _requirements:String;
 		public var jobWindow:JobWindow = new JobWindow();
 
 		
@@ -21,8 +22,8 @@ package model
 			this.jobWindow = wind;
 			this.jobWindow.title = "Edit Job";
 			this._company = wind.jobcompany.text;
-		//	this._deadline = wind.jobdeadline.text;
-		//	this._requirements = wind.jobrequirements.text;
+		    this._deadline = wind.jobdeadline.text;
+			this._requirements = wind.jobrequirements.text;
 			this._title = wind.jobtitle.text;
 
 		}
@@ -36,13 +37,14 @@ package model
 		}
 		
 		public function set deadline(date:Date):void{
-			this._deadline = date;
+			this._deadline = date.toString();
+			this._date = date;
 
 			if(date == null){
 				
 			}
 			else{
-				jobWindow.jobdeadline.text = date.toDateString();
+				jobWindow.jobdeadline.text = date.toString();
 			}
 		}
 		
@@ -57,12 +59,12 @@ package model
 		}
 		
 		public function set requirements(require:String):void{
-			this._requirements = require.split(',');
+			this._requirements = require.split(',').toString();
 			jobWindow.jobrequirements.text = require;
 		}
 		
 		public function get deadline():Date{
-			return this._deadline;
+			return this._date;
 		}
 		
 		public function get company():String{
@@ -74,7 +76,7 @@ package model
 		}
 		
 		public function get requirements():String{
-			return this._requirements.toString();
+			return this._requirements;
 		}
 
 	}

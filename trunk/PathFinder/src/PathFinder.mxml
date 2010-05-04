@@ -332,7 +332,7 @@
 					for (var i:int = 0; i < jobList.length; ++i){
 						var job:Job = jobList[i];
 						
-						if(job.company == selectedNode.attribute("label")){
+						if(job.company + " - " + job.title == selectedNode.attribute("label")){
 							selectedJob = job;
 							index = jobList.indexOf(job);
 						}
@@ -359,15 +359,15 @@
 				
 				var parent:XML = selectedNode.parent();
 				jobpane.selectedChild=addJob;
-			//	jobw.jobcompany.text = selectedNode.attribute("label");
 				var selectedJob:Job;
 				for (var i:int = 0; i < jobList.length; ++i){
 					var job:Job = jobList[i];
-						if(job.company == selectedNode.attribute("label")){
+						if(job.company + " - " + job.title == selectedNode.attribute("label")){
 						selectedJob = job;
 						index = jobList.indexOf(job);
 					}
 				}
+				
 				jobText = selectedJob.viewText();
 				jobpane.selectedChild = view;
 				trace(view);
