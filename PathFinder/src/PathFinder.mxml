@@ -257,7 +257,6 @@
 			private function saveJob():void {
 				
 				jobpane.selectedChild=initialjob;
-				trace(addJob.getChildren());
 				var job:Job = new Job(JobWindow(currentJobWindow));
 				selectedNode = jobTree.selectedItem as XML;
 				if (selectedNode != null && selectedNode.localName().toString()=="job"){
@@ -280,7 +279,9 @@
 //					}
 //					trace(myJobs);
 //				}
-				selectedNode.appendChild(<job id = {job.company} label = {job.company} isBranch = "false"/>);
+
+				var jobLabel:String = job.company + " - " + job.title;
+				selectedNode.appendChild(<job id = {jobLabel} label = {jobLabel} isBranch = "false"/>);
 				jobList.push(job);
 
 				
