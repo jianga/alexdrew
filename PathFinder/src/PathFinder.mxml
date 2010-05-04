@@ -194,7 +194,7 @@
 				<mx:Canvas id = "initialjob" label="Initial" width="100%" height="100%">
 				</mx:Canvas>
 				<mx:Canvas id = "addJob" label="addJob" width="100%" height="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off" >
-					<comp:JobWindow id = "jobw" x = "0" y = "0"/>
+					<!--<comp:JobWindow id = "jobw" x = "0" y = "0"/>-->
 						
 					
 					<mx:Button x="10" y="562" label="Save" fontSize="20" width="97" click="saveJob()"  styleName="myFontStyle"/>
@@ -235,6 +235,7 @@
 			[Bindable] private var editing:Boolean = false;
 			[Bindable] private var index:int;
 			[Bindable] private var jobText:String;
+			[Bindable] private var currentJobWindow:JobWindow;
 			
 			private var interval1:Number=0;
 
@@ -256,11 +257,8 @@
 			private function saveJob():void {
 				
 				jobpane.selectedChild=initialjob;
-				var job:Job = new Job(jobw);
-				job.company = jobw.jobcompany.text;
-				job.title = jobw.jobtitle.text;
-				job.requirements = jobw.jobrequirements.text;
-				job.deadline = jobw.jobdeadline.selectedDate;
+				trace(addJob.getChildren());
+				var job:Job = new Job(JobWindow(currentJobWindow));
 				selectedNode = jobTree.selectedItem as XML;
 				if (selectedNode != null && selectedNode.localName().toString()=="job"){
 					trace("not a branch!");
@@ -284,28 +282,31 @@
 //				}
 				selectedNode.appendChild(<job id = {job.company} label = {job.company} isBranch = "false"/>);
 				jobList.push(job);
-				jobw.jobcompany.text = "";
-				jobw.jobtitle.text = "";
-				jobw.jobrequirements.text = "";
-				jobw.jobdeadline.text = "";
+
 				
 				editing = false;
             	jobTree.addEventListener(MouseEvent.DOUBLE_CLICK, doubleClickJob);
             	jobTree.addEventListener(MouseEvent.CLICK, clickHandler);
             	jobTree.expandItem(selectedNode, true);
+            	addJob.removeChildAt(0);
 				
 			}
 			
 			private function addJobagain():void{
 				jobpane.selectedChild=addJob; 
-				if(jobw == null){}
-				else{
-					jobw.title = "Add Job";
-					jobw.jobcompany.text = "";
-					jobw.jobtitle.text = "";
-					jobw.jobrequirements.text = "";
-					jobw.jobdeadline.text = "";
-				}
+				var jobWindow:JobWindow = new JobWindow();
+				trace("New Job Window created");
+				addJob.addChild(jobWindow);
+				currentJobWindow = jobWindow;
+				
+//				if(jobw == null){}
+//				else{
+//					jobw.title = "Add Job";
+//					jobw.jobcompany.text = "";
+//					jobw.jobtitle.text = "";
+//					jobw.jobrequirements.text = "";
+//					jobw.jobdeadline.text = "";
+//				}
 				
 			}
 			
@@ -327,17 +328,19 @@
 				if (selectedNode.localName()=="job"){
 					var parent:XML = selectedNode.parent();
 					jobpane.selectedChild=addJob;
-					jobw.jobcompany.text = selectedNode.attribute("label");
 					var selectedJob:Job;
-					trace(jobw.jobcompany.text);
 					for (var i:int = 0; i < jobList.length; ++i){
 						var job:Job = jobList[i];
 						
-						if(job.company == jobw.jobcompany.text){
+						if(job.company == selectedNode.attribute("label")){
 							selectedJob = job;
 							index = jobList.indexOf(job);
 						}
 					}
+					addJob.addChild(selectedJob.jobWindow);
+					trace(selectedJob.company);
+					trace(selectedJob.jobWindow.jobtitle.text);
+					trace("hi");
 					
 				}
 				else if(selectedNode.localName()=="folder" || selectedNode.localName()=="root"){
@@ -361,11 +364,11 @@
 				
 				var parent:XML = selectedNode.parent();
 				jobpane.selectedChild=addJob;
-				jobw.jobcompany.text = selectedNode.attribute("label");
+			//	jobw.jobcompany.text = selectedNode.attribute("label");
 				var selectedJob:Job;
 				for (var i:int = 0; i < jobList.length; ++i){
 					var job:Job = jobList[i];
-						if(job.company == jobw.jobcompany.text){
+						if(job.company == selectedNode.attribute("label")){
 						selectedJob = job;
 						index = jobList.indexOf(job);
 					}
@@ -409,17 +412,17 @@
 			
 			private function cancelJob():void {
 				jobpane.selectedChild=initialjob;
-				jobw.jobcompany.text = "";
-				jobw.jobtitle.text = "";
-				jobw.jobrequirements.text = "";
-				jobw.jobdeadline.text = "";
+//				jobw.jobcompany.text = "";
+//				jobw.jobtitle.text = "";
+//				jobw.jobrequirements.text = "";
+//				jobw.jobdeadline.text = "";
 			}
 		
 			private function clearJobFields():void {
-				jobw.jobcompany.text = "";
-				jobw.jobtitle.text = "";
-				jobw.jobrequirements.text = "";
-				jobw.jobdeadline.text = "";
+//				jobw.jobcompany.text = "";
+//				jobw.jobtitle.text = "";
+//				jobw.jobrequirements.text = "";
+//				jobw.jobdeadline.text = "";
 			}
 			
 			[Bindable] private var docList:Array = new Array();
@@ -479,22 +482,22 @@
 				selectedNode = jobTree.selectedItem as XML;
 				var parent:XML = selectedNode.parent();
 				jobpane.selectedChild=addJob;
-				jobw.jobcompany.text = selectedNode.attribute("label");
+			//	jobw.jobcompany.text = selectedNode.attribute("label");
 				var selectedJob:Job;
-				trace(jobw.jobcompany.text);
+			//	trace(jobw.jobcompany.text);
 				for (var i:int = 0; i < jobList.length; ++i){
 					var job:Job = jobList[i];
 					
-					if(job.company == jobw.jobcompany.text){
+					if(job.company == selectedNode.attribute("label")){
 						selectedJob = job;
 						index = jobList.indexOf(job);
 					}
 				}	
 				
-				jobw.jobcompany.text = selectedJob.company;
-				jobw.jobtitle.text = selectedJob.title;
-				jobw.jobrequirements.text = selectedJob.requirements;
-				jobw.jobdeadline.selectedDate = selectedJob.deadline;
+//				jobw.jobcompany.text = selectedJob.company;
+//				jobw.jobtitle.text = selectedJob.title;
+//				jobw.jobrequirements.text = selectedJob.requirements;
+//				jobw.jobdeadline.selectedDate = selectedJob.deadline;
                                
              }          
              

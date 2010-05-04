@@ -27,7 +27,8 @@
 			//public var fileThingy:List = new List();
 			private var browserPanel:Panel = new Panel();
 			public var fileSystem:FileSystemTree = new FileSystemTree();
-			public var file:File = new File();
+			public var file:File = File.desktopDirectory;
+			public var vb2:VBox = new VBox(); 
 					
 		
 			
@@ -53,7 +54,7 @@
                 cancelmeButton.addEventListener(MouseEvent.CLICK, closePopUpB);   
 //                var options:Array = new Array("Resume");
 //                fileThingy.dataProvider = options;      
-                var vb2:VBox = new VBox();  
+ 
                 vb2.setStyle("paddingBottom", 5);
                 vb2.setStyle("paddingLeft", 5);
                 vb2.setStyle("paddingRight", 5);
@@ -83,7 +84,8 @@
             	trace("closing browse window");
             	
             	var reader:HTML = new HTML();
-            	//browserPanel
+            	browserPanel.addChild(reader);
+            	browserPanel.removeChild(vb2);
             	if(HTML.pdfCapability== HTMLPDFCapability.STATUS_OK)
 	          	{
               		reader.location = file.nativePath;

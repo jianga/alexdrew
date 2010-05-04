@@ -12,13 +12,18 @@ package model
 		private var _company:String;
 		private var _title:String;
 		private var _requirements:Array;
-		public var jobWindow:JobWindow;
+		public var jobWindow:JobWindow = new JobWindow();
 
 		
 		public function Job(wind:JobWindow)
 		{
+			this.jobWindow.validateNow();
 			this.jobWindow = wind;
 			this.jobWindow.title = "Edit Job";
+			this._company = wind.jobcompany.text;
+		//	this._deadline = wind.jobdeadline.text;
+		//	this._requirements = wind.jobrequirements.text;
+			this._title = wind.jobtitle.text;
 
 		}
 		
