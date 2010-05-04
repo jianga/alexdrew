@@ -288,25 +288,21 @@
             	jobTree.addEventListener(MouseEvent.DOUBLE_CLICK, doubleClickJob);
             	jobTree.addEventListener(MouseEvent.CLICK, clickHandler);
             	jobTree.expandItem(selectedNode, true);
-            	addJob.removeChildAt(0);
+            	addJob.removeChild(currentJobWindow);
+            	currentJobWindow = null;
 				
 			}
 			
 			private function addJobagain():void{
+				
+				if(currentJobWindow != null){
+					addJob.removeChild(currentJobWindow);
+				}
 				jobpane.selectedChild=addJob; 
 				var jobWindow:JobWindow = new JobWindow();
 				trace("New Job Window created");
 				addJob.addChild(jobWindow);
 				currentJobWindow = jobWindow;
-				
-//				if(jobw == null){}
-//				else{
-//					jobw.title = "Add Job";
-//					jobw.jobcompany.text = "";
-//					jobw.jobtitle.text = "";
-//					jobw.jobrequirements.text = "";
-//					jobw.jobdeadline.text = "";
-//				}
 				
 			}
 			
@@ -322,6 +318,9 @@
 			
 			private function doubleClickJob(evt:MouseEvent):void{	
 				clearInterval(interval1);
+				if(currentJobWindow != null){
+					addJob.removeChild(currentJobWindow);
+				}
 				editing = true;
 				selectedNode = jobTree.selectedItem as XML;
 
@@ -338,6 +337,7 @@
 						}
 					}
 					addJob.addChild(selectedJob.jobWindow);
+					currentJobWindow = selectedJob.jobWindow;
 					trace(selectedJob.company);
 					trace(selectedJob.jobWindow.jobtitle.text);
 					trace("hi");
@@ -347,12 +347,6 @@
 					
 				}
 				
-
-				
-//				jobw.jobcompany.text = selectedJob.company;
-//				jobw.jobtitle.text = selectedJob.title;
-//				jobw.jobrequirements.text = selectedJob.requirements;
-//				jobw.jobdeadline.selectedDate = selectedJob.deadline;
 					
 			}
 			
@@ -412,17 +406,12 @@
 			
 			private function cancelJob():void {
 				jobpane.selectedChild=initialjob;
-//				jobw.jobcompany.text = "";
-//				jobw.jobtitle.text = "";
-//				jobw.jobrequirements.text = "";
-//				jobw.jobdeadline.text = "";
+				addJob.removeChild(currentJobWindow);
+				currentJobWindow = null;
 			}
 		
 			private function clearJobFields():void {
-//				jobw.jobcompany.text = "";
-//				jobw.jobtitle.text = "";
-//				jobw.jobrequirements.text = "";
-//				jobw.jobdeadline.text = "";
+				addJobagain();
 			}
 			
 			[Bindable] private var docList:Array = new Array();
@@ -456,7 +445,7 @@
                        selectedNode = docTree.selectedItem as XML;
                        if (selectedNode.localName()=="doc") {
 	                       documentpane.selectedChild=addDoc;
-	                       docw.doctitle.text = selectedNode.attribute("label");
+
 	                       var selectedDoc:Doc;
 	                       for (var i:int = 0; i < docList.length; ++i){
 	                               var doc:Doc = docList[i];
@@ -465,13 +454,13 @@
 	                               }
 	                       }        
 	                       
-	                       docw.doctitle.text = selectedDoc.title;
-	                       docw.docdescription.text = selectedDoc.description;
-	                       docw.docfile.text = selectedDoc.file;
+
 	                   }
 	                   else if (selectedNode.localName()=="folder" || selectedNode.localName()=="root"){
 	                   	docTree.expandItem(selectedNode, true);
 	                   }
+	                   
+	                   
                                
              }  
              
