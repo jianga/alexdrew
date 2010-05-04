@@ -7,6 +7,7 @@
 		<mx:Label x="10" y="161" text="File:" fontSize="18"/>
 		<mx:TextInput x="109" y="159" height="32" width="225" fontSize="18" id="docfile"/>
 		<mx:Button x="343" y="159" label="Browse..." fontSize="20" click="newBrowseWindow(event)"/>
+
 		
 		<mx:Script>
 			<![CDATA[
@@ -17,10 +18,16 @@
 			import mx.controls.Spacer;
 			import mx.containers.VBox;
 			import mx.controls.List;
+			import mx.controls.FileSystemTree;
+			import flash.filesystem.File;
+			import mx.controls.Alert;
+			import flash.html.HTMLPDFCapability;
+			import mx.controls.HTML;
 			
-			public var fileThingy:List = new List();
+			//public var fileThingy:List = new List();
 			private var browserPanel:Panel = new Panel();
-			
+			public var fileSystem:FileSystemTree = new FileSystemTree();
+			public var file:File = new File();
 					
 		
 			
@@ -31,8 +38,8 @@
 			    
 			private function init():void{
 				var s:Spacer = new Spacer();
-				browserPanel.width = 300;
-				browserPanel.height = 200;
+				browserPanel.width = 600;
+				browserPanel.height = 400;
 				browserPanel.title="Select Document to Add...";
 				browserPanel.visible=true;
 				var cb2:ControlBar = new ControlBar();
@@ -44,16 +51,16 @@
                 var cancelmeButton:Button = new Button();
                 cancelmeButton.label = "Cancel";
                 cancelmeButton.addEventListener(MouseEvent.CLICK, closePopUpB);   
-                var options:Array = new Array("Resume");
-                fileThingy.dataProvider = options;      
+//                var options:Array = new Array("Resume");
+//                fileThingy.dataProvider = options;      
                 var vb2:VBox = new VBox();  
                 vb2.setStyle("paddingBottom", 5);
                 vb2.setStyle("paddingLeft", 5);
                 vb2.setStyle("paddingRight", 5);
                 vb2.setStyle("paddingTop", 5);
-                vb2.addChild(fileThingy);
-                fileThingy.height=100;
-                fileThingy.width=200;
+                vb2.addChild(fileSystem);
+                fileSystem.height=310;
+                fileSystem.width=570;
                 cb2.addChild(s);
                 cb2.addChild(selectButton);
                 cb2.addChild(cancelmeButton);
@@ -63,7 +70,10 @@
 			    
 			    			
 			private function saveNewDoc(evt:MouseEvent):void{
-				this.docfile.text=fileThingy.selectedItem.toString();
+				trace(fileSystem.selectedItem);
+				trace(file);
+				file = File(fileSystem.selectedItem);
+				this.docfile.text=fileSystem.selectedItem.toString();
 				trace("saved new doc name");
 				PopUpManager.removePopUp(browserPanel);
 			}
@@ -71,8 +81,20 @@
 
 			private function closePopUpB(evt:MouseEvent):void {
             	trace("closing browse window");
-                PopUpManager.removePopUp(browserPanel);
-            }
+            	
+            	var reader:HTML = new HTML();
+            	//browserPanel
+            	if(HTML.pdfCapability== HTMLPDFCapability.STATUS_OK)
+	          	{
+              		reader.location = file.nativePath;
+            	}
+            	else{
+              		Alert.show("Can't display PDF content","Problem");
+           	 	}
+                	//PopUpManager.removePopUp(browserPanel);
+            	}
+            	
 		]]>
 		</mx:Script>
+		
 </mx:TitleWindow>
