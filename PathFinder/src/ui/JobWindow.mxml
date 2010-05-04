@@ -23,7 +23,7 @@
 			[Bindable] private var nameInput:TextInput = new TextInput();
 			public var fieldlist:Array= new Array("Interview Date","Recommendation","Recruiter Info", "Notes");
 			private var OKButton:Button = new Button();
-			
+			private var CancelFieldButton:Button = new Button();
 			
 			private function init():void{
 				dropdown.dataProvider = fieldlist;
@@ -33,26 +33,44 @@
 				OKButton.styleName="myFontStyle";
 				OKButton.label="OK";
 				OKButton.addEventListener(MouseEvent.CLICK, selectNewField);
+				
+				CancelFieldButton.styleName="myFontStyle";
+				CancelFieldButton.label="Cancel";
+				CancelFieldButton.addEventListener(MouseEvent.CLICK, cancelNewField);
 			}
 		
 			private function addField():void {
+				this.addbutton.enabled=false;
 				this.addChild(dropdown);
 				dropdown.x=10;
 				dropdown.y=addbutton.y;
 				addbutton.y = addbutton.y+50;
 
 				this.addChild(OKButton);
-				OKButton.x=250
-				OKButton.y=dropdown.y
+				OKButton.x=250;
+				OKButton.y=dropdown.y;
+				
+				this.addChild(CancelFieldButton);
+				CancelFieldButton.x=320
+				CancelFieldButton.y=dropdown.y
 				
 				
+			}
+			
+			private function cancelNewField(evt:MouseEvent):void{
+				this.addbutton.enabled=true;
+				this.removeChild(dropdown);
+				addbutton.y = addbutton.y-50;
+				this.removeChild(OKButton);
+				this.removeChild(CancelFieldButton);
 			}
 
 
 			private function selectNewField(event:MouseEvent):void{
 				if (dropdown.selectedItem=="Interview Date") {
 					this.removeChild(OKButton);
-					
+					this.removeChild(CancelFieldButton);
+					this.addbutton.enabled=true;
 					var date:Label = new Label();
 					date.text="Date:";
 					date.styleName="myFontStyle";
@@ -101,6 +119,8 @@
 				}
 				else if (dropdown.selectedItem!=" "){
 					this.removeChild(OKButton);
+					this.removeChild(CancelFieldButton);
+					this.addbutton.enabled=true;
 					var input:TextInput = new TextInput();
 					input.styleName="myFontStyle";
 					this.addChild(input);
