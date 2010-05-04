@@ -110,24 +110,30 @@
 				
 							
 				if(viewstack1.selectedChild.label == "Positions"){
-					selectedFolder = jobTree.selectedItem as XML;
-					if(selectedFolder != null){
-    					selectedFolder.appendChild(<folder id = {nameInput.text} label = {nameInput.text} isBranch = "true"/>);				
+					selectedNode = jobTree.selectedItem as XML;
+					if(selectedNode != null){
+    					if (selectedNode.localName()=="job"){
+    						selectedNode=jobTree.getParentItem(jobTree.selectedItem);				
+    					}			
     				}
     				else{
-                		myJobs.appendChild(<folder id = {nameInput.text} label = {nameInput.text} isBranch = "true"/>);
+                		selectedNode=myJobs;
                 		}
-                	jobTree.expandItem(selectedFolder, true);
+                	selectedNode.appendChild(<folder id = {nameInput.text} label = {nameInput.text} isBranch = "true"/>);
+                	jobTree.expandItem(selectedNode, true);
     			}
     			
     			if(viewstack1.selectedChild.label == "Documents"){
-    				selectedFolder = docTree.selectedItem as XML;
-    				if(selectedFolder != null){
-    					selectedFolder.appendChild(<folder id = {nameInput.text} label = {nameInput.text} isBranch = "true"/>);				
+    				selectedNode = docTree.selectedItem as XML;
+					if(selectedNode != null){
+    					if (selectedNode.localName()=="doc"){
+    						selectedNode=docTree.getParentItem(docTree.selectedItem);				
+    					}			
     				}
     				else{
-                		myDocs.appendChild(<folder id = {nameInput.text} label = {nameInput.text} isBranch = "true"/>);
+                		selectedNode=myDocs;
                 		}
+                	selectedNode.appendChild(<folder id = {nameInput.text} label = {nameInput.text} isBranch = "true"/>);
                 	docTree.expandItem(selectedFolder, true);
     			}
     			
