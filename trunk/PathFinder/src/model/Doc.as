@@ -1,14 +1,18 @@
 package model
 {
+	import ui.DocWindow;
+	
 	public class Doc
 	{
 		private var _title:String;
 		private var _description:String;
 		private var _file:String;
+		public var docWindow:DocWindow;
 		
-		public function Doc()
+		public function Doc(docw:DocWindow)
 		{
-			
+			this.docWindow = docw;
+			this.docWindow.title = "Edit Document";
 		}
 		
 

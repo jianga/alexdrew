@@ -6,7 +6,7 @@
 		<mx:TextInput x="109" y="48" width="488" height="103" fontSize="18" id="docdescription"/>
 		<mx:Label x="10" y="161" text="File:" fontSize="18"/>
 		<mx:TextInput x="109" y="159" height="32" width="225" fontSize="18" id="docfile"/>
-		<mx:Button x="342" y="170" label="Browse..." fontSize="20" click="newBrowseWindow(event)"/>
+		<mx:Button x="343" y="159" label="Browse..." fontSize="20" click="newBrowseWindow(event)"/>
 		
 		<mx:Script>
 			<![CDATA[
