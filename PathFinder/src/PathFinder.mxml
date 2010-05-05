@@ -50,6 +50,9 @@
 			public var briefcasepicture:Class;
 			[Embed(source="Pictures/calendar.jpg")]
 			public var folderpicture:Class;
+			
+			private var areYouSureWindowDoc:Panel;
+			private var areYouSureWindowJob:Panel;
 
 			
 			private function init():void{
@@ -102,6 +105,9 @@
                 newFolderPanel.height = 140;
                 newFolderPanel.addChild(vb);
                 newFolderPanel.addChild(cb);
+				
+				
+				
                                         
 			}
 			
@@ -170,6 +176,7 @@
 			}
 		]]>
 	</mx:Script>
+	
 	<mx:ViewStack x="10" y="10" id="viewstack1" width="926" height="626">
 		<mx:Canvas label="Calendar" width="100%" height="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off" icon="@Embed(source='Pictures/calpic-sm.jpg')">
 			<mx:Image x="0" y="92" width="557" height="534">
@@ -241,8 +248,16 @@
 	<mx:ToggleButtonBar dataProvider="viewstack1" labelField="icon" height="85" width="264" horizontalCenter="-331" verticalCenter="-271">
 	</mx:ToggleButtonBar>
 	
+	<mx:Window xmlns:mx="http://www.adobe.com/2006/mxml" title="Delete?" layout="absolute" width="168" height="158">
+	<mx:Button id="OKB" x="10" y="86" label="OK"/>
+	<mx:Button id="CancelB" x="75" y="86" label="Cancel"/>
+	<mx:Label x="10" y="10" text="Are you sure you want to delete the selected item?" width="128" height="59"/>	
+	</mx:Window>
+	
 	<mx:Script>
 		<![CDATA[
+
+			import mx.core.Window;
 			import ui.DocWindow;
 			import mx.controls.DateChooser;
 			import mx.controls.Text;
@@ -443,7 +458,8 @@
 //					jobTree.selectedItem = deleteNode.parent();
 //					delete jobTree.selectedItem.node[deleteNode.childIndex()];	
 //					trace("deleted?")	
-					removeNode(jobTree, selectedNode);							
+					removeNode(jobTree, selectedNode);	
+					jobpane.selectedChild = initialjob;						
 				}
 			}
 			
@@ -632,11 +648,96 @@
                 currentDocWindow = selectedDoc.docWindow;              
              }  
 			
-			private function deleteDoc(evt:Event):void{
+			private function deleteDoc():void{
 				selectedNode = docTree.selectedItem as XML;
-				if (selectedNode.localName()=="doc"){
-					docTree.getParentItem(docTree.selectedItem).removeChild(docTree.selectedItem);
+				if (selectedNode != null && selectedNode.localName()!="root"){
+					areYouSureDoc();
+					//delete jobTree.job.(@label==selectedNode.label)[0];
+//					var deleteNode:XML = jobTree.selectedItem as XML;
+//					jobTree.selectedItem = deleteNode.parent();
+//					delete jobTree.selectedItem.node[deleteNode.childIndex()];	
+//					trace("deleted?")	
+					//removeNode(docTree, selectedNode);		
+					//documentpane.selectedChild=initialdoc;					
 				}
+			}
+			
+			private function areYouSureDoc():void{
+				areYouSureWindowDoc = new Panel();
+				var OKBD:Button = new Button();
+				OKBD.label = "OK"
+				var CBD:Button = new Button();
+				CBD.label = "Cancel"
+				var confDtxt:Text = new Text();
+				confDtxt.text = "Are you sure you want to delete the selected item?"
+				confDtxt.height = 60;
+				confDtxt.width = 128;
+				areYouSureWindowDoc.addChild(OKBD);
+				areYouSureWindowDoc.addChild(CBD);
+				areYouSureWindowDoc.addChild(confDtxt);
+				areYouSureWindowDoc.title = "Delete?";
+				areYouSureWindowDoc.height = 158;
+				areYouSureWindowDoc.width = 168;
+				OKBD.x = 10;
+				CBD.x = 75;
+				OKBD.y = 86;
+				CBD.y = 86;
+				confDtxt.x=10;
+				confDtxt.y=10;
+				OKBD.addEventListener(MouseEvent.CLICK, yesDeleteDoc);
+				CBD.addEventListener(MouseEvent.CLICK, closePopupDoc);
+			
+				PopUpManager.addPopUp(areYouSureWindowDoc, this, true);
+                PopUpManager.centerPopUp(areYouSureWindowDoc);
+			}
+			
+			private function closePopupDoc():void{
+				PopUpManager.removePopUp(areYouSureWindowDoc);
+			}
+			
+			private function yesDeleteDoc():void{
+				selectedNode = docTree.selectedItem as XML;
+				removeNode(docTree, selectedNode);		
+				documentpane.selectedChild=initialdoc;
+			}
+			
+			private function areYouSureJob():void{
+				areYouSureWindowJob = new Panel();
+				var OKBJ:Button = new Button();
+				OKBJ.label = "OK"
+				var CBJ:Button = new Button();
+				CBJ.label = "Cancel"
+				var confJtxt:Text = new Text();
+				confJtxt.text = "Are you sure you want to delete the selected item?"
+				confJtxt.height = 60;
+				confJtxt.width = 128;
+				areYouSureWindowJob.addChild(OKBJ);
+				areYouSureWindowJob.addChild(CBJ);
+				areYouSureWindowJob.addChild(confJtxt);
+				areYouSureWindowJob.title = "Delete?";
+				areYouSureWindowJob.height = 158;
+				areYouSureWindowJob.width = 168;
+				OKBJ.x = 10;
+				CBJ.x = 75;
+				OKBJ.y = 86;
+				CBJ.y = 86;
+				confJtxt.x=10;
+				confJtxt.y=10;
+				OKBJ.addEventListener(MouseEvent.CLICK, yesDeleteDoc);
+				CBJ.addEventListener(MouseEvent.CLICK, closePopupDoc);
+			
+				PopUpManager.addPopUp(areYouSureWindowJob, this, true);
+                PopUpManager.centerPopUp(areYouSureWindowJob);
+			}
+			
+			private function closePopupJob():void{
+				PopUpManager.removePopUp(areYouSureWindowJob);
+			}
+			
+			private function yesDeleteJob():void{
+				selectedNode = jobTree.selectedItem as XML;
+				removeNode(jobTree, selectedNode);		
+				jobpane.selectedChild=initialjob;
 			}
              
 		]]>
