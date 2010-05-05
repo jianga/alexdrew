@@ -419,15 +419,33 @@
 			}
 
 			private function deleteJob(evt:Event):void{
+				//trace('deleting...');
 				selectedNode = jobTree.selectedItem as XML;
-				if (selectedNode != null && selectedNode.localName()=="job"){
-					var parent:DisplayObject = jobTree.getParentItem(jobTree.selectedItem);
-					trace(parent.toString());
-					trace(jobTree.selectedItem.toString());
-					jobTree.removeChild(jobTree.selectedItem as DisplayObject);
-					
+				if (selectedNode != null && selectedNode.localName()!="root"){
+					//delete jobTree.job.(@label==selectedNode.label)[0];
+//					var deleteNode:XML = jobTree.selectedItem as XML;
+//					jobTree.selectedItem = deleteNode.parent();
+//					delete jobTree.selectedItem.node[deleteNode.childIndex()];	
+//					trace("deleted?")	
+					removeNode(jobTree, selectedNode);							
 				}
 			}
+			
+			private function removeNode(tree:Tree, node:XML):void
+            {
+                //var node:XML = XML(tree.selectedItem);
+                if(node == null) return;
+				tree.selectedItem = node.parent();
+                var children:XMLList = XMLList(node.parent().children());
+                for(var i:int=0; i<children.length(); i++)
+                {
+                    if(children[i].@label == node.@label)
+                    {
+                        delete children[i];
+                    }
+                }
+            } 
+
 			
 			private function cancelJob():void {
 				jobpane.selectedChild=initialjob;
