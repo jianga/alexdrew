@@ -191,13 +191,10 @@
 				<mx:Canvas label="View 1" width="100%" height="100%">
 				</mx:Canvas>
 			</mx:ViewStack>
-<<<<<<< .mine
-			<mx:TitleWindow x="565" y="92" width="100%" height="100%" layout="absolute" title="To Do:" fontSize="20">
-				<mx:CheckBox x="10" y="20" label="Add a Job" width="311"/>
-=======
+
 			<mx:TitleWindow id = "todo" x="565" y="92" width="351" height="524" layout="absolute" title="To Do:" fontSize="20">
 				<!--><mx:CheckBox x="10" y="20" label="Add a Job" width="311"/><-->
->>>>>>> .r50
+
 			</mx:TitleWindow>
 			<mx:Text x="296" y="10" text="Welcome to PathFinder!" fontSize="50" color="#497AD2" width="556" fontFamily="Georgia"/>
 		</mx:Canvas>
@@ -391,7 +388,7 @@
 				    checkInd += 30;
 				}
 
-			}
+			}}
 			
 			private function addJobagain():void{
 				current=null;
