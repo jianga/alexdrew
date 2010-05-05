@@ -20,9 +20,14 @@
 			import mx.binding.utils.BindingUtils;
 			private var dropdown:ComboBox = new ComboBox();
 			[Bindable] private var nameInput:TextInput = new TextInput();
-			public var fieldlist:Array= new Array("Interview Date","Recommender","Notes");
+			public var fieldlist:Array= new Array("Interview Date","Notes");
 			private var OKButton:Button = new Button();
 			private var CancelFieldButton:Button = new Button();
+			
+			public var input:TextArea = new TextArea();
+			public var datechoose:DateField=new DateField();
+			public var Pinput:TextInput = new TextInput();
+			public var Tinput:TextInput = new TextInput();
 			
 			private function init():void{
 				dropdown.dataProvider = fieldlist;
@@ -43,7 +48,7 @@
 				this.addChild(dropdown);
 				dropdown.x=10;
 				dropdown.y=addbutton.y;
-				addbutton.y = addbutton.y+50;
+				addbutton.y = addbutton.y+60;
 
 				this.addChild(OKButton);
 				OKButton.x=250;
@@ -76,7 +81,7 @@
 					this.addChild(date);	
 					date.x=150;
 				    date.y=dropdown.y;
-					var datechoose:DateField=new DateField();
+					
 					datechoose.styleName="myFontStyle";
 					this.addChild(datechoose);
 					datechoose.x=225;
@@ -89,7 +94,7 @@
 					this.addChild(time);	
 					time.x=375;
 				    time.y=dropdown.y;
-				    var Tinput:TextInput = new TextInput();
+				    
 					Tinput.styleName="myFontStyle";
 					this.addChild(Tinput);
 					Tinput.x=435;
@@ -102,7 +107,7 @@
 					this.addChild(place);	
 					place.x=150;
 				    place.y=dropdown.y+50;
-					var Pinput:TextInput = new TextInput();
+					
 					Pinput.styleName="myFontStyle";
 					this.addChild(Pinput);
 					Pinput.x=225;
@@ -118,13 +123,15 @@
 				}
 				else if (dropdown.selectedItem =="Notes"){
 					this.removeChild(OKButton);
-					var input:TextArea = new TextArea();
+					
 					this.removeChild(CancelFieldButton);
 					this.addbutton.enabled=true;
 
 					input.styleName="myFontStyle";
+					input.width = 439;
+					input.height = 50;
 					this.addChild(input);
-					input.x=250;
+					input.x=160;
 					input.y=dropdown.y;	
 					var textlabel:Label = new Label();
 					textlabel.text=dropdown.selectedItem.toString();

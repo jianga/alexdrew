@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
+<mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" close = "save()" xmlns:comp = "ui.*" creationComplete="init()" layout="absolute" width="948.6" height="656" horizontalScrollPolicy="off" verticalScrollPolicy="off">
 
-<mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:comp = "ui.*" resizeEffect="resize" creationComplete="init()" layout="absolute" width="948.6" height="656" horizontalScrollPolicy="off" verticalScrollPolicy="off">
-	
 	<mx:Style>
        	.myFontStyle { 
            	fontSize: 18;
@@ -55,12 +54,31 @@
 			private var areYouSureWindowDoc:Panel;
 			private var areYouSureWindowJob:Panel;
 			
+			private var jobfile:File;
+            private var jobfileStream:FileStream;
+            private var jobfileName:String = "PathFinderjobdata";
+            private var docfile:File;
+            private var docfileStream:FileStream;
+            private var docfileName:String = "PathFinderdocdata";
+            
+            private var jobListfile:File;
+            private var jobListfileStream:FileStream;
+            private var jobListfileName:String = "PathFinderjobListdata";
+            private var docListfile:File;
+            private var docListfileStream:FileStream;
+            private var docListfileName:String = "PathFinderdocListdata";
+
+			
 			private function resize():void{
 				
 			}
 
+
 			
 			private function init():void{
+				//read();	
+				trace(jobList);
+				
 				var docmenuView:ContextMenuItem = new ContextMenuItem("View");
 				docmenuView.addEventListener(ContextMenuEvent.MENU_ITEM_SELECT,viewDoc); 
 				docMenu.addItem(docmenuView);
@@ -179,6 +197,121 @@
 				PopUpManager.addPopUp(newFolderPanel, this, true);
                 PopUpManager.centerPopUp(newFolderPanel);
 			}
+			
+			private function save():void
+            {
+                // Create file object
+                jobfile = File.documentsDirectory.resolvePath(jobfileName);
+                // FileStream for writing the file
+                jobfileStream = new FileStream();
+                // Open the file in write mode
+                jobfileStream.open(jobfile, FileMode.WRITE);
+                jobfileStream.writeObject(myJobs);
+                // Close FileStream
+                jobfileStream.close();
+                
+                jobListfile = File.documentsDirectory.resolvePath(jobListfileName);
+                // FileStream for writing the file
+                jobListfileStream = new FileStream();
+                // Open the file in write mode
+                jobListfileStream.open(jobListfile, FileMode.WRITE);
+                jobListfileStream.writeObject(jobList);
+                // Close FileStream
+                jobListfileStream.close();
+                
+                // Create file object
+                docfile = File.documentsDirectory.resolvePath(docfileName);
+                // FileStream for writing the file
+                docfileStream = new FileStream();
+                // Open the file in write mode
+                docfileStream.open(docfile, FileMode.WRITE);
+                // Write the ArrayCollection object of persons to the file
+                docfileStream.writeObject(myDocs);
+                // Close FileStream
+                docfileStream.close();
+                
+                // Create file object
+                docListfile = File.documentsDirectory.resolvePath(docListfileName);
+                // FileStream for writing the file
+                docListfileStream = new FileStream();
+                // Open the file in write mode
+                docListfileStream.open(docListfile, FileMode.WRITE);
+                // Write the ArrayCollection object of persons to the file
+                docListfileStream.writeObject(docList);
+                // Close FileStream
+                docListfileStream.close();
+            }
+            
+            private function read():void
+            {
+                jobfile = File.documentsDirectory.resolvePath(jobfileName);
+                docfile = File.documentsDirectory.resolvePath(docfileName);
+                jobListfile = File.documentsDirectory.resolvePath(jobListfileName);
+                docListfile = File.documentsDirectory.resolvePath(docListfileName);
+               
+                // read the file if it exists
+                if(jobfile.exists)
+                {
+
+                    // FileStream for reading the file
+                    jobfileStream = new FileStream();
+                    // Open the file in read mode
+                    jobfileStream.open(jobfile, FileMode.READ);
+                    // Read the ArrayCollection object of persons from the file
+                    myJobs = jobfileStream.readObject() as XML;
+                    // Close the FileStream
+                    jobfileStream.close();
+                  
+                }
+                else
+                {
+                    
+                }
+                if(jobListfile.exists){
+                	
+                	
+                	// FileStream for reading the file
+                    jobListfileStream = new FileStream();
+                    // Open the file in read mode
+                    jobListfileStream.open(jobListfile, FileMode.READ);
+                    // Read the ArrayCollection object of persons from the file
+                    jobList = jobListfileStream.readObject();// as ArrayCollection;
+                    // Close the FileStream
+                    jobListfileStream.close();
+                }
+                else{
+                
+                }
+                
+                                   
+                if(docfile.exists){ 
+        
+                    docfileStream = new FileStream();
+                    // Open the file in read mode
+                    docfileStream.open(docfile, FileMode.READ);
+                    // Read the ArrayCollection object of persons from the file
+                    myDocs = docfileStream.readObject() as XML;
+                    // Close the FileStream
+                    docfileStream.close();
+   				}
+   				else{
+                
+                }
+                
+                if(docListfile.exists){ 
+                                      
+                    docListfileStream = new FileStream();
+                    // Open the file in read mode
+                    docListfileStream.open(docListfile, FileMode.READ);
+                    // Read the ArrayCollection object of persons from the file
+                    docList = docListfileStream.readObject(); //as ArrayCollection;
+                    // Close the FileStream
+                    docListfileStream.close();
+   				}
+   				else{
+                	
+                }
+            }
 		]]>
 	</mx:Script>
 	
@@ -212,10 +345,10 @@
 					<mx:Button x="115" y="562" label="Cancel" fontSize="20" click="cancelDoc()"/>
 					<mx:Button x="222" y="562" label="Clear All" fontSize="20" click = "clearDocFields()"/>
 				</mx:Canvas>
-				<mx:Canvas id = "docview" label="viewDoc" width="100%" height="100%" >
-					<mx:TitleWindow id = "docviewWind" x="0" y="0" width="633" height="554" layout="absolute" title="View Doc" fontSize="34" fontFamily="Times New Roman">
+				<mx:Canvas id = "docview" label="viewDoc" width="100%" height="100%" fontSize = "24" fontFamily = "Times New Roman">
+		<!-->			<mx:TitleWindow id = "docviewWind" x="0" y="0" width="633" height="554" layout="absolute" title="View Doc" fontSize="34" fontFamily="Times New Roman">
 						<mx:Text id = "docviewText" x="10" y="10" width="583" height="501" text = "dootdoc" styleName = "myFontStyle"/>
-					</mx:TitleWindow>
+					</mx:TitleWindow><-->
 					<mx:Button x="10" y="562" label="Edit" fontSize="20" click = "editDoc2()"/>
 				</mx:Canvas>
 			</mx:ViewStack>
@@ -238,10 +371,10 @@
 					<mx:Button x="115" y="562" label="Cancel" fontSize="20" click="cancelJob()" styleName="myFontStyle"/>
 					<mx:Button x="222" y="562" label="Clear All" fontSize="20" click = "clearJobFields()" styleName="myFontStyle"/>
 				</mx:Canvas>
-				<mx:Canvas id = "view" label="viewJob" width="100%" height="100%" >
-					<mx:TitleWindow id = "viewWind" x="0" y="0" width="633" height="554" layout="absolute" title="View Job" fontSize="34" fontFamily="Times New Roman">
-						<mx:Text id = "viewText" x="10" y="10" width="583" height="501" text = "doot" styleName = "myFontStyle"/>
-					</mx:TitleWindow>
+				<mx:Canvas id = "view" label="viewJob" width="100%" height="100%" fontSize = "24" fontFamily = "Times New Roman">
+					<!--><mx:TitleWindow id = "viewWind" x="0" y="0" width="633" height="554" layout="absolute" title="View Job" fontSize="34" fontFamily="Times New Roman">
+						<mx:Text id = "viewText" x="10" y="10" width="583" height="501" text = "" styleName = "myFontStyle"/>
+					</mx:TitleWindow><-->
 					<mx:Button x="10" y="562" label="Edit" fontSize="20" click = "editJob()"/>
 				</mx:Canvas>
 			</mx:ViewStack>
@@ -274,7 +407,8 @@
 			
 
 			[Bindable] private var selectedNode:XML;
-			[Bindable] private var jobList:Array = new Array();
+			[ArrayElementType("Job")]
+			[Bindable] private var jobList:ArrayCollection = new ArrayCollection();
 			[Bindable] private var editing:Boolean = false;
 			private var current:XML;
 			[Bindable] private var index:int;
@@ -282,12 +416,16 @@
 			[Bindable] private var docText:String;
 			[Bindable] private var currentJobWindow:JobWindow;
 			[Bindable] private var currentDocWindow:DocWindow;
+			[Bindable] private var viewWind:TitleWindow;
+			[Bindable] private var viewText:Text;
+			[Bindable] private var docviewWind:TitleWindow;
+			[Bindable] private var docviewText:Text;
 			
 			
 			private var interval1:Number=0;
 			private var interval2:Number=0;
 			
-			private var checkInd = 5;
+			private var checkInd:int = 5;
 
 			
 			private function clearDocFields():void {
@@ -344,8 +482,13 @@
 				var jobLabel:String = job.company + " - " + job.title;
 				trace(jobLabel);
 				selectedNode.appendChild(<job id = {jobLabel} label = {jobLabel} isBranch = "false"/>);
-				jobList.push(job);
-				
+
+				//job.requirementsArray = jobList as Array;
+				trace(jobList);
+				jobList.addItem(job);
+
+				editing = false;
+
             	jobTree.addEventListener(MouseEvent.DOUBLE_CLICK, doubleClickJob);
             	jobTree.addEventListener(MouseEvent.CLICK, clickHandler);
             	jobTree.expandItem(selectedNode, true);
@@ -356,13 +499,55 @@
             	jobText = job.viewText();
 
 				jobpane.selectedChild = view;
+				trace(jobTree.numChildren);
+            	jobTree.selectedIndex = jobList.length;
 				trace("viewText:");
             	trace(viewText);
-					if(viewText == null){
+            	
+            	selectedNode = jobTree.selectedItem as XML;
+            	
+            	var selectedJob:Job;
+            	for (var i:int = 0; i < jobList.length; ++i){
+						var job1:Job = jobList[i];
+						trace(job1.company);
+						trace(selectedNode.attribute("label"));
+						if(job1.company + " - " + job1.title == selectedNode.attribute("label")){
+							selectedJob = job1;
+							trace("hello");
+							
+
+						}
+					}
+					
+				jobText = selectedJob.viewText();
+					
+				if(viewText == null){
+						viewWind = new TitleWindow();
+						viewWind.fontContext
+						viewWind.title = "View Job";
+						
+						viewWind.width = 633;
+						viewWind.height = 554;
+						viewWind.setStyle("fontSize", 34);
+						view.addChildAt(viewWind, 0);
+						viewText = new Text();
+						viewText.setStyle("fontSize", 24);
+						viewText.text = jobText;
+						viewText.x = 10;
+						viewText.y = 10;
+						
+						viewWind.addChild(viewText);
 				}				
 				else{				
 					viewText.text = jobText;
 				}
+				
+				if(viewText == null){
+
+				}				
+				else{				
+					viewText.text = jobText;
+			}
            	//jobTree.selectedItem = selectedNode.job.(@label = jobLabel);
            	
            	singleClickJob();
@@ -437,7 +622,7 @@
 						
 						if(job.company + " - " + job.title == selectedNode.attribute("label")){
 							selectedJob = job;
-							index = jobList.indexOf(job);
+							
 						}
 					}
 					addJob.addChild(selectedJob.jobWindow);
@@ -466,16 +651,24 @@
 						var job:Job = jobList[i];
 							if((job.company + " - " + job.title) == selectedNode.attribute("label")){
 							selectedJob = job;
+							
 
 						}
 					}
 					
 					jobText = selectedJob.viewText();
 					jobpane.selectedChild = view;
-	
+
+					
 					 //trace("viewText:");
             		 //trace(viewText);
 					if(viewText == null){
+						var temp:TitleWindow = new TitleWindow();
+						temp.title = "View Job";
+						view.addChild(temp);
+						var lala:Text = new Text();
+						lala.text = jobText;
+					
 					}				
 					else{				
 						viewText.text = jobText;
@@ -541,8 +734,8 @@
 			private function clearJobFields():void {
 				addJobagain();
 			}
-			
-			[Bindable] private var docList:Array = new Array();
+			[ArrayElementType("Doc")]
+			[Bindable] private var docList:ArrayCollection = new ArrayCollection();
 		
 		
 		
@@ -579,7 +772,7 @@
 				   }
 				   
                    selectedNode.appendChild(<doc id = {doc.title} label = {doc.title} isBranch = "false"/>);
-                   docList.push(doc);
+                   docList.addItem(doc);
                   
                    
                    docTree.addEventListener(MouseEvent.DOUBLE_CLICK, doubleClickDoc);
@@ -592,7 +785,23 @@
             	   docText = doc.viewText();
 				   documentpane.selectedChild = docview;
 				   if(docviewText == null){
-				   }				
+				   		docviewWind = new TitleWindow();
+						docviewWind.fontContext
+						docviewWind.title = "View Job";
+						
+						docviewWind.width = 633;
+						docviewWind.height = 554;
+						docviewWind.setStyle("fontSize", 34);
+						docview.addChildAt(docviewWind, 0);
+						docviewText = new Text();
+						docviewText.setStyle("fontSize", 24);
+						docviewText.text = docText;
+						docviewText.x = 10;
+						docviewText.y = 10;
+						
+						docviewWind.addChild(docviewText);
+				   }
+				   				
 				   else{							   
 					docviewText.text = docText;
 			     	}
@@ -668,9 +877,7 @@
 					docText = selectedDoc.viewText();
 					documentpane.selectedChild = docview;
 	
-					trace(docview);
-					trace(docviewWind);
-					trace(docviewText);
+
 					if(docviewText == null){
 					}				
 					else{				
@@ -704,7 +911,7 @@
 					var job:Job = jobList[i];					
 					if(job.company + " - " + job.title == selectedNode.attribute("label")){
 						selectedJob = job;
-						index = jobList.indexOf(job);
+						
 					}
 				}	
 
