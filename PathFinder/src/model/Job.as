@@ -1,7 +1,7 @@
 package model
 {
 	import mx.skins.halo.TitleBackground;
-	
+	[RemoteClass]
 	public class Job
 	{
 		import ui.JobWindow;
@@ -15,6 +15,11 @@ package model
 		private var _requirements:String;
 		public var requirementsArray:Array;
 		public var jobWindow:JobWindow = new JobWindow();
+		
+		private var _Notes:String;
+		private var _intDate:String;
+		private var _intPlace:String;
+		private var _inttime:String;
 
 		
 		public function Job(wind:JobWindow)
@@ -26,6 +31,10 @@ package model
 		    this._deadline = wind.jobdeadline.text;
 			this._requirements = wind.jobrequirements.text;
 			this._title = wind.jobtitle.text;
+			this._Notes = wind.input.text;
+			this._intDate = wind.Tinput.text;
+			this._intPlace = wind.datechoose.text;
+			this._inttime = wind.Tinput.text;
 			while (this._requirements.indexOf(" ") != -1 ) {
 				this._requirements = this._requirements.replace(" ", "");
 			}
@@ -37,6 +46,15 @@ package model
 			var text:String;
 			
 			text = "Company: " + this._company + "\n" + "Title: " + this._title + "\n" +  "Deadline: " + this._deadline + "\n" + "Requirements: " + this._requirements;
+			
+			if(this._Notes!=""){
+				text = text + "\n" + "Notes: " + this._Notes;
+			}
+			
+			if(this._intDate!=""){
+				text = text + "\n" + "Interview: " + "\n" + "     " + "Date: " + this._intDate + "     Time: " + this._inttime + "\n" + "     " + "Place: " + this._intPlace;
+			}
+			
 			return text;
 		
 		}

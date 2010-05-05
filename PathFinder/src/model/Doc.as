@@ -1,7 +1,7 @@
 package model
 {
 	import ui.DocWindow;
-	
+	[RemoteClass]
 	public class Doc
 	{
 		private var _title:String;
