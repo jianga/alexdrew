@@ -97,6 +97,6 @@
             	
 		]]>
 		</mx:Script>
-		<mx:TextArea x="109" y="50" width="488" height="101" id="docdescription"/>
+		<mx:TextArea x="109" y="50" width="488" height="101" id="docdescription" fontSize="18"/>
 		
 </mx:TitleWindow>
