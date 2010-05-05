@@ -4,7 +4,6 @@
 			<mx:Label x="10" y="10" text="Company:" height="31" width="119" fontSize="18"/>
 			<mx:Label x="10" y="49" text="Title:" id="sizeref" fontSize="18" height="32"/>
 			<mx:TextInput x="161" y="47" width="438" height="34" fontSize="18" id="jobtitle"/>
-			<mx:TextInput x="161" y="138" width="438" height="112" fontSize="18" id="jobrequirements"/>
 			<mx:Text x="10" y="129" text="Requirements &#xd;for Application:" width="143" height="109" fontSize="18" textAlign="left"/>
 			<mx:Button x="10" y="258" id = "addbutton" label="Add Another Field" fontSize="18" click="addField()"/>
 			<mx:DateField showToday = "true" x="161" y="89" height="32" fontSize="18" id="jobdeadline" width="156"/>
@@ -21,7 +20,7 @@
 			import mx.binding.utils.BindingUtils;
 			private var dropdown:ComboBox = new ComboBox();
 			[Bindable] private var nameInput:TextInput = new TextInput();
-			public var fieldlist:Array= new Array("Interview Date","Recommendation","Recruiter Info", "Notes");
+			public var fieldlist:Array= new Array("Interview Date","Recommender","Notes");
 			private var OKButton:Button = new Button();
 			private var CancelFieldButton:Button = new Button();
 			
@@ -117,11 +116,12 @@
 					interviewdatetext.y=dropdown.y;
 					this.removeChild(dropdown);			
 				}
-				else if (dropdown.selectedItem!=" "){
+				else if (dropdown.selectedItem =="Notes"){
 					this.removeChild(OKButton);
+					var input:TextArea = new TextArea();
 					this.removeChild(CancelFieldButton);
 					this.addbutton.enabled=true;
-					var input:TextInput = new TextInput();
+
 					input.styleName="myFontStyle";
 					this.addChild(input);
 					input.x=250;
@@ -132,6 +132,21 @@
 					this.addChild(textlabel);	
 					textlabel.x=dropdown.x;
 					textlabel.y=dropdown.y;
+					this.removeChild(dropdown);			
+				}
+				else if (dropdown.selectedItem =="Recommender"){
+					this.removeChild(OKButton);
+					var input2:TextInput = new TextInput();
+					input2.styleName="myFontStyle";
+					this.addChild(input2);
+					input2.x=250;
+					input2.y=dropdown.y;	
+					var textlabel2:Label = new Label();
+					textlabel2.text=dropdown.selectedItem.toString();
+					textlabel2.styleName="myFontStyle";
+					this.addChild(textlabel2);	
+					textlabel2.x=dropdown.x;
+					textlabel2.y=dropdown.y;
 					this.removeChild(dropdown);			
 				}
 				
@@ -148,5 +163,6 @@
 		
 		]]>
 	</mx:Script>
+		<mx:TextArea x="161" y="129" width="438" height="121" id="jobrequirements" fontSize="18"/>
 	
 </mx:TitleWindow>
