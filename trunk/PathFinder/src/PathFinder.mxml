@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:comp = "ui.*" creationComplete="init()" layout="absolute" width="948.6" height="656" horizontalScrollPolicy="off" verticalScrollPolicy="off">
+<mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:comp = "ui.*" resizeEffect="resize" creationComplete="init()" layout="absolute" width="948.6" height="656" horizontalScrollPolicy="off" verticalScrollPolicy="off">
+	
 	<mx:Style>
        	.myFontStyle { 
            	fontSize: 18;
@@ -53,6 +54,10 @@
 			
 			private var areYouSureWindowDoc:Panel;
 			private var areYouSureWindowJob:Panel;
+			
+			private function resize():void{
+				
+			}
 
 			
 			private function init():void{
@@ -177,7 +182,7 @@
 		]]>
 	</mx:Script>
 	
-	<mx:ViewStack x="10" y="10" id="viewstack1" width="926" height="626">
+	<mx:ViewStack x="10" y="10" id="viewstack1" width="100%" height="100%">
 		<mx:Canvas label="Calendar" width="100%" height="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off" icon="@Embed(source='Pictures/calpic-sm.jpg')">
 			<mx:Image x="0" y="92" width="557" height="534">
 				<mx:source>Pictures/calendar.png</mx:source>
@@ -186,15 +191,20 @@
 				<mx:Canvas label="View 1" width="100%" height="100%">
 				</mx:Canvas>
 			</mx:ViewStack>
+<<<<<<< .mine
+			<mx:TitleWindow x="565" y="92" width="100%" height="100%" layout="absolute" title="To Do:" fontSize="20">
+				<mx:CheckBox x="10" y="20" label="Add a Job" width="311"/>
+=======
 			<mx:TitleWindow id = "todo" x="565" y="92" width="351" height="524" layout="absolute" title="To Do:" fontSize="20">
 				<!--><mx:CheckBox x="10" y="20" label="Add a Job" width="311"/><-->
+>>>>>>> .r50
 			</mx:TitleWindow>
 			<mx:Text x="296" y="10" text="Welcome to PathFinder!" fontSize="50" color="#497AD2" width="556" fontFamily="Georgia"/>
 		</mx:Canvas>
-		<mx:Canvas label="Documents" width="120%" height="100%" horizontalScrollPolicy="off" visible="true" verticalScrollPolicy="off" icon="@Embed(source='Pictures/docpicturesm.jpg')">
+		<mx:Canvas label="Documents" width="100%" height="100%" horizontalScrollPolicy="off" visible="true" verticalScrollPolicy="off" icon="@Embed(source='Pictures/docpicturesm.jpg')">
 			<mx:Button x="0" y="589" label="Add Folder" width="124" click="getFolderPopUp(event)" fontSize="14"/>
 			<mx:Button x="141" y="589" label="Add Doc" width="124" click="addDocagain()" fontSize="14"/>
-			<mx:ViewStack x="273" y="10" id="documentpane" width="643" height="606">
+			<mx:ViewStack x="273" y="10" id="documentpane" width="100%" height="100%">
 			<mx:Canvas id = "initialdoc" label="Initial" width="100%" height="100%">
 			</mx:Canvas>
 			<mx:Canvas id = "addDoc" label="AddDoc" width="100%" height="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
@@ -251,6 +261,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import mx.containers.HBox;
 
 			import mx.core.Window;
 			import ui.DocWindow;
@@ -268,6 +279,7 @@
 			[Bindable] private var selectedNode:XML;
 			[Bindable] private var jobList:Array = new Array();
 			[Bindable] private var editing:Boolean = false;
+			private var current:XML;
 			[Bindable] private var index:int;
 			[Bindable] private var jobText:String;
 			[Bindable] private var docText:String;
@@ -294,9 +306,31 @@
 				addDoc.removeChild(currentDocWindow);
 				currentDocWindow = null;
 			}
+			
+			
 			private function saveJob():void {
-				
+				trace(editing && current==null);
+				if (editing==true && current!=null){
+					//if this is an old job being edited
+					for (var i:int = 0; i < jobList.length; ++i){
+		                               var jobCheck:Job = jobList[i];
+		                               var jobLabel:String = (jobCheck.company+" - "+jobCheck.title);
 
+		                               if(jobLabel == current.attribute("label")){
+		                                       var job:Job = new Job(currentJobWindow);
+		                              		   current.@label=(job.company+" - "+job.title);
+		                                       jobList[i]=job;
+		                                       editing=false;
+		                                       current=null;
+		                                       jobTree.selectedItem=selectedNode;
+		                                       singleClickJob();       
+		                               }
+		                               break;
+		                       }
+		        editing=false;
+				}else{
+					
+				jobpane.selectedChild=initialjob;
 				var job:Job = new Job(JobWindow(currentJobWindow));
 				selectedNode = jobTree.selectedItem as XML;
 				if (selectedNode != null && selectedNode.localName().toString()=="job"){
@@ -307,31 +341,22 @@
 					trace("selectedNode null");
 					selectedNode = myJobs;			
 				}
-//				if(editing == true){
-//				 	for (var i:int = 0; i< myJobs.length(); ++i)
-//					{
-//						
-//						if(myJobs.item[i].attribute("label") == selectedNode.attribute("label"))
-//					{
-//						delete myJobs.item[i];
-//						trace("hello")
-//					}
-//					}
-//					trace(myJobs);
-//				}
+				
+				
 
 				var jobLabel:String = job.company + " - " + job.title;
+				trace(jobLabel);
 				selectedNode.appendChild(<job id = {jobLabel} label = {jobLabel} isBranch = "false"/>);
-				
 				jobList.push(job);
-				editing = false;
+				
             	jobTree.addEventListener(MouseEvent.DOUBLE_CLICK, doubleClickJob);
             	jobTree.addEventListener(MouseEvent.CLICK, clickHandler);
             	jobTree.expandItem(selectedNode, true);
             	addJob.removeChild(currentJobWindow);
             	currentJobWindow = null;
 
-            //	jobText = selectedJob.viewText();
+
+            	jobText = job.viewText();
 
 				jobpane.selectedChild = view;
 				trace("viewText:");
@@ -341,7 +366,10 @@
 				else{				
 					viewText.text = jobText;
 				}
-            	//jobTree.selectedItem = selectedNode.job.(@label = jobLabel);
+           	//jobTree.selectedItem = selectedNode.job.(@label = jobLabel);
+           	
+           	singleClickJob();
+
 
             	trace(job.requirementsArray);
             	var jobTitle:Label = new Label();
@@ -362,10 +390,12 @@
 				    todo.addChild(check);
 				    checkInd += 30;
 				}
+
 			}
 			
 			private function addJobagain():void{
-				
+				current=null;
+				editing=false;
 				if(currentJobWindow != null){
 					addJob.removeChild(currentJobWindow);
 				}
@@ -378,6 +408,8 @@
 			}
 			
 			private function addDocagain():void{
+				current=null;
+				editing=false;
 				if(currentDocWindow != null){
 					addDoc.removeChild(currentDocWindow);
 				}
@@ -390,6 +422,8 @@
 
 			
 			private function doubleClickJob(evt:Event):void{	
+				current=jobTree.selectedItem as XML;
+				editing=true;
 				clearInterval(interval1);
 				if(currentJobWindow != null){
 					addJob.removeChild(currentJobWindow);
@@ -422,16 +456,18 @@
 			}
 			
 			private function singleClickJob():void{
+				if (!editing){
 				clearInterval(interval1);
-
+				editing = false;
+				current=null;
 				selectedNode = jobTree.selectedItem as XML;
-				if (selectedNode.localName()=="job"){
+				if (selectedNode != null && selectedNode.localName()=="job"){
 				
 					var parent:XML = selectedNode.parent();
 					var selectedJob:Job;
 					for (var i:int = 0; i < jobList.length; ++i){
 						var job:Job = jobList[i];
-							if(job.company + " - " + job.title == selectedNode.attribute("label")){
+							if((job.company + " - " + job.title) == selectedNode.attribute("label")){
 							selectedJob = job;
 
 						}
@@ -440,15 +476,15 @@
 					jobText = selectedJob.viewText();
 					jobpane.selectedChild = view;
 	
-					 trace("viewText:");
-            		 trace(viewText);
+					 //trace("viewText:");
+            		 //trace(viewText);
 					if(viewText == null){
 					}				
 					else{				
 						viewText.text = jobText;
 					}
 				}
-				else if(selectedNode.localName()=="folder" || selectedNode.localName()=="root"){
+				else if(selectedNode!=null && (selectedNode.localName()=="folder" || selectedNode.localName()=="root")){
 					jobTree.expandItem(selectedNode, true);
 				}
 				
@@ -457,7 +493,7 @@
 				clearInterval(interval1);
 
 
-			}
+			}}
 
 
 			
@@ -471,13 +507,14 @@
 				//trace('deleting...');
 				selectedNode = jobTree.selectedItem as XML;
 				if (selectedNode != null && selectedNode.localName()!="root"){
+					areYouSureJob();
 					//delete jobTree.job.(@label==selectedNode.label)[0];
 //					var deleteNode:XML = jobTree.selectedItem as XML;
 //					jobTree.selectedItem = deleteNode.parent();
 //					delete jobTree.selectedItem.node[deleteNode.childIndex()];	
 //					trace("deleted?")	
-					removeNode(jobTree, selectedNode);	
-					jobpane.selectedChild = initialjob;						
+					//removeNode(jobTree, selectedNode);	
+					//jobpane.selectedChild = initialjob;						
 				}
 			}
 			
@@ -498,6 +535,7 @@
 
 			
 			private function cancelJob():void {
+				editing=false;
 				jobpane.selectedChild=initialjob;
 				addJob.removeChild(currentJobWindow);
 				currentJobWindow = null;
@@ -509,7 +547,28 @@
 			
 			[Bindable] private var docList:Array = new Array();
 		
+		
+		
+		
+		
 			private function saveDoc():void {
+				if (current != null){
+					for (var i:int = 0; i < docList.length; ++i){
+		                               var docCheck:Doc = docList[i];
+		                               if(docCheck.title == current.attribute("label")){
+		                               		   var doc:Doc = new Doc(currentDocWindow);
+		                              		   current.@label=doc.title;
+		                                       docList[i]=doc;
+		                                       editing=false;
+		                                       current=null;
+		                                       docTree.selectedItem=selectedNode;
+		                                       singleClickDoc();       
+		                               }
+		                               break;
+		                       }
+		        editing=false;
+				}
+				else{
                    documentpane.selectedChild=initialdoc;
                    var doc:Doc = new Doc(currentDocWindow);
                    
@@ -521,8 +580,10 @@
 						//trace("selectedNode null");
 						selectedNode = myDocs;				
 				   }
+				   
                    selectedNode.appendChild(<doc id = {doc.title} label = {doc.title} isBranch = "false"/>);
                    docList.push(doc);
+                  
                    
                    docTree.addEventListener(MouseEvent.DOUBLE_CLICK, doubleClickDoc);
                    docTree.addEventListener(MouseEvent.CLICK, clickHandlerDoc);
@@ -535,11 +596,15 @@
 				   documentpane.selectedChild = docview;
 				   if(docviewText == null){
 				   }				
-				   else{			
-				   
-				   
+				   else{							   
 					docviewText.text = docText;
 			     	}
+			       
+			     	}
+			     	docTree.selectedItem = selectedNode;
+			     	//docTree.selectedItem = selectedNode.children()[selectedNode.children().length()];
+			     	trace(docTree.selectedItem==null);
+			      	singleClickDoc();
             }
             
             private function clickHandlerDoc(event:MouseEvent):void{			
@@ -548,13 +613,17 @@
 
 			}
             
-            private function doubleClickDoc(evt:Event):void{       
+            private function doubleClickDoc(evt:Event):void{  
+            	selectedNode = docTree.selectedItem as XML;
+            	if (selectedNode.localName()=="doc") {
+            	editing=true;  
+            	current=selectedNode;
                        clearInterval(interval2);  
                        if(currentDocWindow != null){
 					        addDoc.removeChild(currentDocWindow);
 							}    
-                       selectedNode = docTree.selectedItem as XML;
-                       if (selectedNode.localName()=="doc") {
+                       
+                       
 	                       documentpane.selectedChild=addDoc;
 
 	                       var selectedDoc:Doc;
@@ -564,7 +633,8 @@
 	                                       selectedDoc = doc;
 	                               }
 	                       }        
-	                       
+	                   addDoc.addChild(selectedDoc.docWindow);
+						currentDocWindow = selectedDoc.docWindow;   
 
 	                   }
 	                   else if (selectedNode.localName()=="folder" || selectedNode.localName()=="root"){
@@ -572,22 +642,23 @@
 	                   }
 	                   
 
-	                addDoc.addChild(selectedDoc.docWindow);
-					currentDocWindow = selectedDoc.docWindow;
+	                
 	                   
                                
              }  
              
              private function singleClickDoc():void{
+             	if (!editing){
 				clearInterval(interval1);
-
+				editing=false;
+				current=null;
 				selectedNode = docTree.selectedItem as XML;
 				if (selectedNode.localName()=="doc"){
 				
 					var parent:XML = selectedNode.parent();
 	
 					var selectedDoc:Doc;
-					 for (var i:int = 0; i < docList.length; ++i){
+					for (var i:int = 0; i < docList.length; ++i){
 		                               var doc:Doc = docList[i];
 		                               if(doc.title == selectedNode.attribute("label")){
 		                                       selectedDoc = doc;
@@ -619,20 +690,21 @@
 
 
 			}
+			
+			}
 
              
              private function editJob():void{
-                               
-                               
-                editing = true;
-				selectedNode = jobTree.selectedItem as XML;
-				var parent:XML = selectedNode.parent();
+            	selectedNode=jobTree.selectedItem as XML; 
+            	if (selectedNode != null && selectedNode.localName()=="job"){
+            	editing=true; 
+            	current=selectedNode;
+				//var parent:XML = selectedNode.parent();
 				jobpane.selectedChild=addJob;
 				var selectedJob:Job;
 
 				for (var i:int = 0; i < jobList.length; ++i){
-					var job:Job = jobList[i];
-					
+					var job:Job = jobList[i];					
 					if(job.company + " - " + job.title == selectedNode.attribute("label")){
 						selectedJob = job;
 						index = jobList.indexOf(job);
@@ -641,14 +713,14 @@
 
                 addJob.addChild(selectedJob.jobWindow); 
                 currentJobWindow = selectedJob.jobWindow;              
-             }     
+             }   }  
         
              
-             private function editDoc2():void{
-                               
-                               
+             private function editDoc2():void{  
+             	selectedNode = docTree.selectedItem as XML;
+				if (selectedNode != null && selectedNode.localName()=="doc"){       
                 editing = true;
-				selectedNode = docTree.selectedItem as XML;
+				current=selectedNode;
 				var parent:XML = selectedNode.parent();
 				documentpane.selectedChild=addDoc;
 				var selectedDoc:Doc;
@@ -658,15 +730,13 @@
                                selectedDoc = doc;
                        }
                	}        
-               
-
-	                   	
-
                 addDoc.addChild(selectedDoc.docWindow); 
                 currentDocWindow = selectedDoc.docWindow;              
-             }  
+             }  }
 			
-			private function deleteDoc():void{
+			private function deleteDoc(evt:Event):void{
+				editing=false;
+				current=null;
 				selectedNode = docTree.selectedItem as XML;
 				if (selectedNode != null && selectedNode.localName()!="root"){
 					areYouSureDoc();
@@ -686,34 +756,45 @@
 				OKBD.label = "OK"
 				var CBD:Button = new Button();
 				CBD.label = "Cancel"
+				OKBD.addEventListener(MouseEvent.CLICK, yesDeleteDoc);
+				CBD.addEventListener(MouseEvent.CLICK, closePopupDoc);
 				var confDtxt:Text = new Text();
 				confDtxt.text = "Are you sure you want to delete the selected item?"
 				confDtxt.height = 60;
 				confDtxt.width = 128;
-				areYouSureWindowDoc.addChild(OKBD);
-				areYouSureWindowDoc.addChild(CBD);
-				areYouSureWindowDoc.addChild(confDtxt);
-				areYouSureWindowDoc.title = "Delete?";
 				areYouSureWindowDoc.height = 158;
 				areYouSureWindowDoc.width = 168;
 				OKBD.x = 10;
 				CBD.x = 75;
 				OKBD.y = 86;
 				CBD.y = 86;
-				confDtxt.x=10;
-				confDtxt.y=10;
-				OKBD.addEventListener(MouseEvent.CLICK, yesDeleteDoc);
-				CBD.addEventListener(MouseEvent.CLICK, closePopupDoc);
+				confDtxt.x=15;
+				confDtxt.y=15;
+				var dcb:ControlBar = new ControlBar();
+				var dvb:VBox = new VBox();
+				var s:Spacer = new Spacer();
+				dvb.setStyle("paddingBottom", 5);
+                dvb.setStyle("paddingLeft", 5);
+                dvb.setStyle("paddingRight", 5);
+                dvb.setStyle("paddingTop", 5);
+				dvb.addChild(confDtxt);
+				dcb.addChild(s);
+				dcb.addChild(OKBD);
+				dcb.addChild(CBD);
+				areYouSureWindowDoc.addChild(dvb);
+				areYouSureWindowDoc.addChild(dcb);
+				areYouSureWindowDoc.title = "Delete?";
 			
 				PopUpManager.addPopUp(areYouSureWindowDoc, this, true);
                 PopUpManager.centerPopUp(areYouSureWindowDoc);
 			}
 			
-			private function closePopupDoc():void{
+			private function closePopupDoc(evt:Event):void{
 				PopUpManager.removePopUp(areYouSureWindowDoc);
 			}
 			
-			private function yesDeleteDoc():void{
+			private function yesDeleteDoc(evt:Event):void{
+				closePopupDoc(evt);
 				selectedNode = docTree.selectedItem as XML;
 				removeNode(docTree, selectedNode);		
 				documentpane.selectedChild=initialdoc;
@@ -729,10 +810,6 @@
 				confJtxt.text = "Are you sure you want to delete the selected item?"
 				confJtxt.height = 60;
 				confJtxt.width = 128;
-				areYouSureWindowJob.addChild(OKBJ);
-				areYouSureWindowJob.addChild(CBJ);
-				areYouSureWindowJob.addChild(confJtxt);
-				areYouSureWindowJob.title = "Delete?";
 				areYouSureWindowJob.height = 158;
 				areYouSureWindowJob.width = 168;
 				OKBJ.x = 10;
@@ -741,18 +818,32 @@
 				CBJ.y = 86;
 				confJtxt.x=10;
 				confJtxt.y=10;
-				OKBJ.addEventListener(MouseEvent.CLICK, yesDeleteDoc);
-				CBJ.addEventListener(MouseEvent.CLICK, closePopupDoc);
-			
+				OKBJ.addEventListener(MouseEvent.CLICK, yesDeleteJob);
+				CBJ.addEventListener(MouseEvent.CLICK, closePopupJob);
+				var jcb:ControlBar = new ControlBar();
+				var jvb:VBox = new VBox();
+				var s:Spacer = new Spacer();
+				jvb.setStyle("paddingBottom", 5);
+                jvb.setStyle("paddingLeft", 5);
+                jvb.setStyle("paddingRight", 5);
+                jvb.setStyle("paddingTop", 5);
+				jvb.addChild(confJtxt);
+				jcb.addChild(s);
+				jcb.addChild(OKBJ);
+				jcb.addChild(CBJ);
+				areYouSureWindowJob.addChild(jvb);
+				areYouSureWindowJob.addChild(jcb);
+				areYouSureWindowJob.title = "Delete?";
 				PopUpManager.addPopUp(areYouSureWindowJob, this, true);
                 PopUpManager.centerPopUp(areYouSureWindowJob);
 			}
 			
-			private function closePopupJob():void{
+			private function closePopupJob(evt:Event):void{
 				PopUpManager.removePopUp(areYouSureWindowJob);
 			}
 			
-			private function yesDeleteJob():void{
+			private function yesDeleteJob(evt:Event):void{
+				closePopupJob(evt);
 				selectedNode = jobTree.selectedItem as XML;
 				removeNode(jobTree, selectedNode);		
 				jobpane.selectedChild=initialjob;
