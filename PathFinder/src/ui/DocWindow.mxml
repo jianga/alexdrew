@@ -3,7 +3,6 @@
 		<mx:Label x="10" y="10" text="Title:" fontSize="18"/>
 		<mx:TextInput x="109" y="10" width="488" height="32" fontSize="18" id="doctitle"/>
 		<mx:Label x="10" y="50" text="Description:" fontSize="18"/>
-		<mx:TextInput x="109" y="48" width="488" height="103" fontSize="18" id="docdescription"/>
 		<mx:Label x="10" y="161" text="File:" fontSize="18"/>
 		<mx:TextInput x="109" y="159" height="32" width="225" fontSize="18" id="docfile"/>
 		<mx:Button x="343" y="159" label="Browse..." fontSize="20" click="newBrowseWindow(event)"/>
@@ -98,5 +97,6 @@
             	
 		]]>
 		</mx:Script>
+		<mx:TextArea x="109" y="50" width="488" height="101" id="docdescription"/>
 		
 </mx:TitleWindow>

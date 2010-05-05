@@ -299,6 +299,7 @@
 
 				var jobLabel:String = job.company + " - " + job.title;
 				selectedNode.appendChild(<job id = {jobLabel} label = {jobLabel} isBranch = "false"/>);
+				
 				jobList.push(job);
 				editing = false;
             	jobTree.addEventListener(MouseEvent.DOUBLE_CLICK, doubleClickJob);
@@ -306,7 +307,16 @@
             	jobTree.expandItem(selectedNode, true);
             	addJob.removeChild(currentJobWindow);
             	currentJobWindow = null;
-            	
+
+            	jobText = job.viewText();
+				jobpane.selectedChild = view;
+					if(viewText == null){
+				}				
+				else{				
+					viewText.text = jobText;
+				}
+            	//jobTree.selectedItem = selectedNode.job.(@label = jobLabel);
+
 				
 			}
 			
@@ -375,7 +385,7 @@
 				if (selectedNode.localName()=="job"){
 				
 				var parent:XML = selectedNode.parent();
-				jobpane.selectedChild=addJob;
+				//jobpane.selectedChild=addJob;
 				var selectedJob:Job;
 				for (var i:int = 0; i < jobList.length; ++i){
 					var job:Job = jobList[i];
