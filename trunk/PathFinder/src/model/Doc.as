@@ -7,14 +7,26 @@ package model
 		private var _title:String;
 		private var _description:String;
 		private var _file:String;
-		public var docWindow:DocWindow;
+		public var docWindow:DocWindow = new DocWindow();
+				
 		
 		public function Doc(docw:DocWindow)
 		{
+			this.docWindow.validateNow();
 			this.docWindow = docw;
 			this.docWindow.title = "Edit Document";
+			this._title = docw.doctitle.text;
+			this._description = docw.docdescription.text;
+			this._file = docw.docfile.text;
 		}
 		
+		public function viewText():String{
+			var text:String;
+			
+			text = "Title: " + this._title + "\n" +  "Description: " + this._description + "\n" + "File: " + this._file;
+			return text;
+		
+		}
 
 		
 		public function set title(titl:String):void{

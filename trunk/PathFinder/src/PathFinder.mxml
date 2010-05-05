@@ -191,12 +191,18 @@
 			<mx:Canvas id = "initialdoc" label="Initial" width="100%" height="100%">
 			</mx:Canvas>
 			<mx:Canvas id = "addDoc" label="AddDoc" width="100%" height="100%" horizontalScrollPolicy="off" verticalScrollPolicy="off">
-					<comp:DocWindow id = "docw" x = "0" y = "0">
+					<!--<comp:DocWindow id = "docw" x = "0" y = "0">
 						
-					</comp:DocWindow>
+					</comp:DocWindow>-->
 					<mx:Button x="10" y="562" label="Save" fontSize="20" width="97" click = "saveDoc()"/>
 					<mx:Button x="115" y="562" label="Cancel" fontSize="20" click="cancelDoc()"/>
 					<mx:Button x="222" y="562" label="Clear All" fontSize="20" click = "clearDocFields()"/>
+				</mx:Canvas>
+				<mx:Canvas id = "docview" label="viewDoc" width="100%" height="100%" >
+					<mx:TitleWindow id = "docviewWind" x="0" y="0" width="633" height="554" layout="absolute" title="View Doc" fontSize="34" fontFamily="Times New Roman">
+						<mx:Text id = "docviewText" x="10" y="10" width="583" height="501" text = "dootdoc" styleName = "myFontStyle"/>
+					</mx:TitleWindow>
+					<mx:Button x="10" y="562" label="Edit" fontSize="20" click = "editDoc2()"/>
 				</mx:Canvas>
 			</mx:ViewStack>
 			<mx:Tree id = "docTree" x="0" y="88" width="265" height="498" doubleClickEnabled = "true" showRoot="true" labelField="@label" dragEnabled="true" contextMenu="docMenu" rightClick = "docMenu.display(this.stage, this.mouseX, this.mouseY)" dropEnabled="true" dataProvider="{myDocs}">	
@@ -237,6 +243,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import ui.DocWindow;
 			import mx.controls.DateChooser;
 			import mx.controls.Text;
 			import mx.controls.List;
@@ -252,24 +259,26 @@
 			[Bindable] private var editing:Boolean = false;
 			[Bindable] private var index:int;
 			[Bindable] private var jobText:String;
+			[Bindable] private var docText:String;
 			[Bindable] private var currentJobWindow:JobWindow;
+			[Bindable] private var currentDocWindow:DocWindow;
 			
 			private var interval1:Number=0;
+			private var interval2:Number=0;
 
 			
 			private function clearDocFields():void {
-				docw.doctitle.text = "";
-				docw.docdescription.text = "";
-				docw.docfile.text = "";
+//				docw.doctitle.text = "";
+//				docw.docdescription.text = "";
+//				docw.docfile.text = "";
 			}
 			
 
 			
 			private function cancelDoc():void {
 				documentpane.selectedChild=initialdoc;
-				docw.doctitle.text = "";
-				docw.docdescription.text = "";
-				docw.docfile.text = "";
+				addDoc.removeChild(currentDocWindow);
+				currentDocWindow = null;
 			}
 			private function saveJob():void {
 				
@@ -308,7 +317,9 @@
             	addJob.removeChild(currentJobWindow);
             	currentJobWindow = null;
 
-            	jobText = job.viewText();
+            //	jobText = selectedJob.viewText();
+            	trace("viewText:");
+            	trace(viewText);
 				jobpane.selectedChild = view;
 					if(viewText == null){
 				}				
@@ -334,13 +345,14 @@
 			}
 			
 			private function addDocagain():void{
-				documentpane.selectedChild=addDoc; 
-				if(docw == null){}
-				else{
-					docw = new DocWindow();
-					docw.title = "Add Doc";
+				if(currentDocWindow != null){
+					addDoc.removeChild(currentDocWindow);
 				}
-				
+				documentpane.selectedChild=addDoc; 
+				var docWindow:DocWindow = new DocWindow();
+				trace("New Doc Window created");
+				addDoc.addChild(docWindow);
+				currentDocWindow = docWindow;
 			}
 
 			
@@ -366,9 +378,7 @@
 					}
 					addJob.addChild(selectedJob.jobWindow);
 					currentJobWindow = selectedJob.jobWindow;
-					trace(selectedJob.company);
-					trace(selectedJob.jobWindow.jobtitle.text);
-					trace("hi");
+
 					
 				}
 				else if(selectedNode.localName()=="folder" || selectedNode.localName()=="root"){
@@ -384,30 +394,26 @@
 				selectedNode = jobTree.selectedItem as XML;
 				if (selectedNode.localName()=="job"){
 				
-				var parent:XML = selectedNode.parent();
-				//jobpane.selectedChild=addJob;
-				var selectedJob:Job;
-				for (var i:int = 0; i < jobList.length; ++i){
-					var job:Job = jobList[i];
-						if(job.company + " - " + job.title == selectedNode.attribute("label")){
-						selectedJob = job;
-						index = jobList.indexOf(job);
-						jobText = selectedJob.viewText();
-						jobpane.selectedChild = view;
-					}
-				}
-				
-				jobText = selectedJob.viewText();
-				jobpane.selectedChild = view;
+					var parent:XML = selectedNode.parent();
+					var selectedJob:Job;
+					for (var i:int = 0; i < jobList.length; ++i){
+						var job:Job = jobList[i];
+							if(job.company + " - " + job.title == selectedNode.attribute("label")){
+							selectedJob = job;
 
-				trace(view);
-				trace(viewWind);
-				trace(viewText);
-				if(viewText == null){
-				}				
-				else{				
-					viewText.text = jobText;
-				}
+						}
+					}
+					
+					jobText = selectedJob.viewText();
+					jobpane.selectedChild = view;
+	
+					 trace("viewText:");
+            		 trace(viewText);
+					if(viewText == null){
+					}				
+					else{				
+						viewText.text = jobText;
+					}
 				}
 				else if(selectedNode.localName()=="folder" || selectedNode.localName()=="root"){
 					jobTree.expandItem(selectedNode, true);
@@ -471,7 +477,8 @@
 		
 			private function saveDoc():void {
                    documentpane.selectedChild=initialdoc;
-                   var doc:Doc = new Doc(docw);
+                   var doc:Doc = new Doc(currentDocWindow);
+                   
                    selectedNode = docTree.selectedItem as XML;
                    if (selectedNode != null && selectedNode.localName().toString()=="doc"){
 						selectedNode = docTree.getParentItem(docTree.selectedItem);
@@ -480,15 +487,38 @@
 						//trace("selectedNode null");
 						selectedNode = myDocs;				
 				   }
-                   selectedNode.appendChild(<doc label = {doc.title}/>);
+                   selectedNode.appendChild(<doc id = {doc.title} label = {doc.title} isBranch = "false"/>);
                    docList.push(doc);
                    
                    docTree.addEventListener(MouseEvent.DOUBLE_CLICK, doubleClickDoc);
+                   docTree.addEventListener(MouseEvent.CLICK, clickHandlerDoc);
                    docTree.expandItem(selectedNode, true);
+                   
+                   addDoc.removeChild(currentDocWindow);
+            	   currentDocWindow = null;
+            	   
+            	   docText = doc.viewText();
+				   documentpane.selectedChild = docview;
+				   if(docviewText == null){
+				   }				
+				   else{			
+				   
+				   
+					docviewText.text = docText;
+			     	}
             }
             
+            private function clickHandlerDoc(event:MouseEvent):void{			
+				clearInterval(interval2);
+				interval2 = setInterval(singleClickDoc, 300);
+
+			}
+            
             private function doubleClickDoc(evt:Event):void{       
-                               
+                       clearInterval(interval2);  
+                       if(currentDocWindow != null){
+					        addDoc.removeChild(currentDocWindow);
+							}    
                        selectedNode = docTree.selectedItem as XML;
                        if (selectedNode.localName()=="doc") {
 	                       documentpane.selectedChild=addDoc;
@@ -496,7 +526,7 @@
 	                       var selectedDoc:Doc;
 	                       for (var i:int = 0; i < docList.length; ++i){
 	                               var doc:Doc = docList[i];
-	                               if(doc.title == docw.doctitle.text){
+	                               if(doc.title == selectedNode.attribute("label")){
 	                                       selectedDoc = doc;
 	                               }
 	                       }        
@@ -507,9 +537,55 @@
 	                   	docTree.expandItem(selectedNode, true);
 	                   }
 	                   
+
+	                addDoc.addChild(selectedDoc.docWindow);
+					currentDocWindow = selectedDoc.docWindow;
 	                   
                                
              }  
+             
+             private function singleClickDoc():void{
+				clearInterval(interval1);
+
+				selectedNode = docTree.selectedItem as XML;
+				if (selectedNode.localName()=="doc"){
+				
+					var parent:XML = selectedNode.parent();
+	
+					var selectedDoc:Doc;
+					 for (var i:int = 0; i < docList.length; ++i){
+		                               var doc:Doc = docList[i];
+		                               if(doc.title == selectedNode.attribute("label")){
+		                                       selectedDoc = doc;
+		                               }
+		                       }        
+		                       
+	
+		                   
+					
+					docText = selectedDoc.viewText();
+					documentpane.selectedChild = docview;
+	
+					trace(docview);
+					trace(docviewWind);
+					trace(docviewText);
+					if(docviewText == null){
+					}				
+					else{				
+						docviewText.text = docText;
+					}
+			}
+				else if(selectedNode.localName()=="folder" || selectedNode.localName()=="root"){
+					docTree.expandItem(selectedNode, true);
+				}
+				
+				
+
+				clearInterval(interval2);
+
+
+			}
+
              
              private function editJob():void{
                                
@@ -531,8 +607,30 @@
 
                 addJob.addChild(selectedJob.jobWindow); 
                 currentJobWindow = selectedJob.jobWindow;              
-             }          
+             }     
+        
              
+             private function editDoc2():void{
+                               
+                               
+                editing = true;
+				selectedNode = docTree.selectedItem as XML;
+				var parent:XML = selectedNode.parent();
+				documentpane.selectedChild=addDoc;
+				var selectedDoc:Doc;
+                for (var i:int = 0; i < docList.length; ++i){
+                       var doc:Doc = docList[i];
+                       if(doc.title == selectedNode.attribute("label")){
+                               selectedDoc = doc;
+                       }
+               	}        
+               
+
+	                   	
+
+                addDoc.addChild(selectedDoc.docWindow); 
+                currentDocWindow = selectedDoc.docWindow;              
+             }  
 			
 			private function deleteDoc(evt:Event):void{
 				selectedNode = docTree.selectedItem as XML;
