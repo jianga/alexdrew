@@ -13,6 +13,7 @@ package model
 		private var _company:String;
 		private var _title:String;
 		private var _requirements:String;
+		public var requirementsArray:Array;
 		public var jobWindow:JobWindow = new JobWindow();
 
 		
@@ -25,6 +26,10 @@ package model
 		    this._deadline = wind.jobdeadline.text;
 			this._requirements = wind.jobrequirements.text;
 			this._title = wind.jobtitle.text;
+			while (this._requirements.indexOf(" ") != -1 ) {
+				this._requirements = this._requirements.replace(" ", "");
+			}
+			this.requirementsArray = this._requirements.split(',');
 
 		}
 		
@@ -61,6 +66,7 @@ package model
 		public function set requirements(require:String):void{
 			this._requirements = require.split(',').toString();
 			jobWindow.jobrequirements.text = require;
+			this.requirementsArray = require.split(',');
 		}
 		
 		public function get deadline():Date{
