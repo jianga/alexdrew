@@ -248,11 +248,6 @@
 	<mx:ToggleButtonBar dataProvider="viewstack1" labelField="icon" height="85" width="264" horizontalCenter="-331" verticalCenter="-271">
 	</mx:ToggleButtonBar>
 	
-	<mx:Window xmlns:mx="http://www.adobe.com/2006/mxml" title="Delete?" layout="absolute" width="168" height="158">
-	<mx:Button id="OKB" x="10" y="86" label="OK"/>
-	<mx:Button id="CancelB" x="75" y="86" label="Cancel"/>
-	<mx:Label x="10" y="10" text="Are you sure you want to delete the selected item?" width="128" height="59"/>	
-	</mx:Window>
 	
 	<mx:Script>
 		<![CDATA[
