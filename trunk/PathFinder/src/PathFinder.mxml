@@ -273,7 +273,7 @@
 			}
 			private function saveJob():void {
 				
-				jobpane.selectedChild=initialjob;
+
 				var job:Job = new Job(JobWindow(currentJobWindow));
 				selectedNode = jobTree.selectedItem as XML;
 				if (selectedNode != null && selectedNode.localName().toString()=="job"){
@@ -518,23 +518,19 @@
 				selectedNode = jobTree.selectedItem as XML;
 				var parent:XML = selectedNode.parent();
 				jobpane.selectedChild=addJob;
-			//	jobw.jobcompany.text = selectedNode.attribute("label");
 				var selectedJob:Job;
-			//	trace(jobw.jobcompany.text);
+
 				for (var i:int = 0; i < jobList.length; ++i){
 					var job:Job = jobList[i];
 					
-					if(job.company == selectedNode.attribute("label")){
+					if(job.company + " - " + job.title == selectedNode.attribute("label")){
 						selectedJob = job;
 						index = jobList.indexOf(job);
 					}
 				}	
-				
-//				jobw.jobcompany.text = selectedJob.company;
-//				jobw.jobtitle.text = selectedJob.title;
-//				jobw.jobrequirements.text = selectedJob.requirements;
-//				jobw.jobdeadline.selectedDate = selectedJob.deadline;
-                               
+
+                addJob.addChild(selectedJob.jobWindow); 
+                currentJobWindow = selectedJob.jobWindow;              
              }          
              
 			
