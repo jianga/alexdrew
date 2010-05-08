@@ -27,7 +27,8 @@
 			private var browserPanel:Panel = new Panel();
 			public var fileSystem:FileSystemTree = new FileSystemTree();
 			public var file:File = File.desktopDirectory;
-			public var vb2:VBox = new VBox(); 
+			public var vb2:VBox = new VBox();
+			public var path:String;
 					
 		
 			
@@ -73,7 +74,9 @@
 				trace(fileSystem.selectedItem);
 				trace(file);
 				file = File(fileSystem.selectedItem);
-				this.docfile.text=fileSystem.selectedItem.toString();
+				path = file.nativePath;
+				this.docfile.text=path;
+				
 				trace("saved new doc name");
 				PopUpManager.removePopUp(browserPanel);
 			}
@@ -81,18 +84,18 @@
 
 			private function closePopUpB(evt:MouseEvent):void {
             	trace("closing browse window");
-            	var path:String=file.nativePath;
-            	var reader:HTML = new HTML();
-            	if(HTML.pdfCapability== HTMLPDFCapability.STATUS_OK)
-	          	{
-             // 		reader.load(path);
-              		browserPanel.addChild(reader);
-            		browserPanel.removeChild(vb2);
-            	}
-            	else{
-              		Alert.show("Can't display PDF content","Problem");
-           	 	}
-                	//PopUpManager.removePopUp(browserPanel);
+            	path=file.nativePath;
+//            	var reader:HTML = new HTML();
+//            	if(HTML.pdfCapability== HTMLPDFCapability.STATUS_OK)
+//	          	{
+//             // 		reader.load(path);
+//              		browserPanel.addChild(reader);
+//            		browserPanel.removeChild(vb2);
+//            	}
+//            	else{
+//              		Alert.show("Can't display PDF content","Problem");
+//           	 	}
+                	PopUpManager.removePopUp(browserPanel);
             	}
             	
 		]]>

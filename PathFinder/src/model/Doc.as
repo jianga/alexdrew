@@ -23,7 +23,7 @@ package model
 		public function viewText():String{
 			var text:String;
 			
-			text = "Title: " + this._title + "\n" +  "Description: " + this._description + "\n" + "File: " + this._file;
+			text = "Description:   " + this._description + "\n" + "File:                " + this._file;
 			return text;
 		
 		}
