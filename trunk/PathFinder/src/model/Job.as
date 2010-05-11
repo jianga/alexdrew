@@ -1,6 +1,9 @@
 package model
 {
+	import mx.controls.Tree;
+	import mx.core.WindowedApplication;
 	import mx.collections.ArrayCollection;
+
 	[RemoteClass]
 	public class Job
 	{
@@ -25,6 +28,7 @@ package model
 		
 		public function Job(wind:JobWindow)
 		{
+			
 			this.jobWindow.validateNow();
 			this.jobWindow = wind;
 			this.jobWindow.title = "Edit Job";
