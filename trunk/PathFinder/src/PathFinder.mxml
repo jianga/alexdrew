@@ -451,14 +451,18 @@
 			
 			
 			private function saveJob():void {
+				
+				trace("editing?");
+				trace(editing);
 				trace(editing && current==null);
-				trace(current);
 				if (editing==true && current!=null){
 					//if this is an old job being edited
+					trace("into loop");
 					for (var i:int = 0; i < jobList.length; ++i){
 		                               var jobCheck:Job = jobList[i];
 		                               var jobLabel:String = (jobCheck.company+" - "+ jobCheck.title);
-
+										trace(jobLabel);
+										trace(current.attribute("label"));
 		                               if(jobLabel == current.attribute("label")){
 		                                       var job:Job = new Job(currentJobWindow);
 		                              		   current.@label=(job.company+" - "+job.title);
@@ -466,9 +470,19 @@
 		                                       editing=false;
 		                                       current=null;
 		                                       jobTree.selectedItem=selectedNode;
-		                                       singleClickJob();       
+		                                       viewText.text = jobText;
+		                                       addJob.removeChild(currentJobWindow);
+            								   currentJobWindow = null;
+            								   trace("job.viewText");
+            								   trace(job.viewText());
+		                                       jobText = job.viewText();
+		                                       jobpane.selectedChild = view;
+											   viewWind.title = job.jobWindow.jobcompany.text + " - " + job.jobWindow.jobtitle.text;
+		                                       singleClickJob();      
+		                                       
+		                                       break; 
 		                               }
-		                               break;
+		                               
 		                       }
 		        editing=false;
 				}
@@ -478,11 +492,11 @@
 				var job:Job = new Job(JobWindow(currentJobWindow));
 				selectedNode = jobTree.selectedItem as XML;
 				if (selectedNode != null && selectedNode.localName().toString()=="job"){
-					trace("not a branch!");
+					//trace("not a branch!");
 					selectedNode = jobTree.getParentItem(jobTree.selectedItem);
 				}
 				if(selectedNode == null){
-					trace("selectedNode null");
+					//trace("selectedNode null");
 					selectedNode = myJobs;			
 				}
 				
@@ -508,10 +522,10 @@
             	jobText = job.viewText();
 
 
-				trace(jobTree.numChildren);
+				//trace(jobTree.numChildren);
             	jobTree.selectedIndex = jobList.length;
-				trace("viewText:");
-            	trace(viewText);
+				//trace("viewText:");
+            	//trace(viewText);
             	
             	selectedNode = jobTree.selectedItem as XML;
             	
@@ -558,12 +572,11 @@
 				else{				
 					viewText.text = jobText;
 			}
-           	//jobTree.selectedItem = selectedNode.job.(@label = jobLabel);
            	
            	singleClickJob();
 
 				lala.text = "";
-            	trace(job.requirementsArray);
+            	//trace(job.requirementsArray);
             	var jobTitle:Label = new Label();
             	jobTitle.text = jobLabel;
             	jobTitle.x = 10;
@@ -583,7 +596,8 @@
 				    checkInd += 30;
 				}
 
-			}}
+			}
+			}
 			
 			private function addJobagain():void{
 				current=null;
@@ -593,7 +607,7 @@
 				}
 				jobpane.selectedChild=addJob; 
 				var jobWindow:JobWindow = new JobWindow();
-				trace("New Job Window created");
+			//	trace("New Job Window created");
 				addJob.addChild(jobWindow);
 				currentJobWindow = jobWindow;
 
@@ -607,7 +621,7 @@
 				}
 				documentpane.selectedChild=addDoc; 
 				var docWindow:DocWindow = new DocWindow();
-				trace("New Doc Window created");
+			//	trace("New Doc Window created");
 				addDoc.addChild(docWindow);
 				currentDocWindow = docWindow;
 			}
@@ -615,6 +629,8 @@
 			
 			private function doubleClickJob(evt:Event):void{	
 				current=jobTree.selectedItem as XML;
+				trace("double click");
+				trace(current.attribute("label"));
 				editing=true;
 				clearInterval(interval1);
 				if(currentJobWindow != null){
@@ -667,7 +683,7 @@
 					}
 					
 					jobText = selectedJob.viewText();
-					trace(jobText);
+					//trace(jobText);
 					jobpane.selectedChild = view;
 
 					
@@ -766,8 +782,9 @@
 		                                       current=null;
 		                                       docTree.selectedItem=selectedNode;
 		                                       singleClickDoc();       
+		                                       break;
 		                               }
-		                               break;
+		                              
 		                       }
 		        editing=false;
 				}
@@ -787,6 +804,7 @@
                    selectedNode.appendChild(<doc id = {doc.title} label = {doc.title} isBranch = "false"/>);
                    docList.addItem(doc);
                   
+                   docTree.selectedIndex = docList.length;
                    
                    docTree.addEventListener(MouseEvent.DOUBLE_CLICK, doubleClickDoc);
                    docTree.addEventListener(MouseEvent.CLICK, clickHandlerDoc);
@@ -817,7 +835,7 @@
 				   				
 				   else{							   
 						docviewText.text = docText;
-						docviewWind.title = selectedNode.docWindow.title;
+						docviewWind.title = doc.title;
 			     	}
 			       
 			     	}
@@ -896,7 +914,7 @@
 					}				
 					else{				
 						docviewText.text = docText;
-						docviewWind.title = selectedNode.docWindow.title;
+						docviewWind.title = selectedDoc.title;
 					}
 			}
 				else if(selectedNode.localName()=="folder" || selectedNode.localName()=="root"){
@@ -917,9 +935,10 @@
             	selectedNode=jobTree.selectedItem as XML; 
             	if (selectedNode != null && selectedNode.localName()=="job"){
             	editing=true; 
+            	trace("selected Node")
+            	trace(selectedNode.attribute("label"));
             	current=selectedNode;
             	trace("selected");
-            	trace(current.toString());
 				//var parent:XML = selectedNode.parent();
 				jobpane.selectedChild=addJob;
 				var selectedJob:Job;

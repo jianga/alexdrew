@@ -1,10 +1,9 @@
 package model
 {
 	import mx.collections.ArrayCollection;
+	import mx.core.Application;
 	
 	import ui.DocWindow;
-
-	import mx.core.Application;
 	[RemoteClass]
 
 	public class Doc
@@ -13,7 +12,8 @@ package model
 		private var _description:String;
 		private var _file:String;
 		public var docWindow:DocWindow = new DocWindow();
-		public var jobsArray:ArrayCollection = new ArrayCollection();		
+		public var jobsArray:ArrayCollection = new ArrayCollection();
+		public var _jobs:String;		
 		
 		public function Doc(docw:DocWindow)
 		{
@@ -24,6 +24,7 @@ package model
 			this._description = docw.docdescription.text;
 			this._file = docw.docfile.text;
 			this.jobsArray=docw.jobs;
+			this._jobs = docw.jobs.toString();
 			var jobList:ArrayCollection = mx.core.Application.application.jobList;
 			for (var jobName:String in jobsArray){
 				//find the document
@@ -44,7 +45,7 @@ package model
 		public function viewText():String{
 			var text:String;
 			
-			text = "Description:   " + this._description + "\n" + "File:                " + this._file;
+			text = "Description:   " + this._description + "\n" + "File:                " + this._file + "\n" + "Jobs:               " + this._jobs;
 			return text;
 		
 		}
