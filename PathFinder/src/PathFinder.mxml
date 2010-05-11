@@ -332,6 +332,7 @@
 			</mx:ViewStack>
 
 			<mx:TitleWindow id = "todo" x="565" y="92" width="351" height="524" layout="absolute" title="To Do:" fontSize="20">
+				<mx:Text x="38.5" y="27" text="Any requirements added to a Job &#xd;will be listed here" textAlign="center" fontSize="14" width="254" height="41"/>
 				<!--><mx:CheckBox x="10" y="20" label="Add a Job" width="311"/><-->
 
 			</mx:TitleWindow>
@@ -456,7 +457,7 @@
 					//if this is an old job being edited
 					for (var i:int = 0; i < jobList.length; ++i){
 		                               var jobCheck:Job = jobList[i];
-		                               var jobLabel:String = (jobCheck.company+" - "+jobCheck.title);
+		                               var jobLabel:String = (jobCheck.company+" - "+ jobCheck.title);
 
 		                               if(jobLabel == current.attribute("label")){
 		                                       var job:Job = new Job(currentJobWindow);
@@ -488,11 +489,11 @@
 				
 
 				var jobLabel:String = job.company + " - " + job.title;
-				trace(jobLabel);
+				//trace(jobLabel);
 				selectedNode.appendChild(<job id = {jobLabel} label = {jobLabel} isBranch = "false"/>);
 
 				//job.requirementsArray = jobList as Array;
-				trace(jobList);
+				//trace(jobList);
 				jobList.addItem(job);
 
 				editing = false;
@@ -666,22 +667,24 @@
 					}
 					
 					jobText = selectedJob.viewText();
+					trace(jobText);
 					jobpane.selectedChild = view;
 
 					
-					 //trace("viewText:");
-            		 //trace(viewText);
+
 					if(viewText == null){
 						var temp:TitleWindow = new TitleWindow();
-						temp.title = "View Job";
+						temp.title = job.jobWindow.jobcompany.text + " - " + job.jobWindow.jobtitle.text;
 						view.addChild(temp);
 						var lala:Text = new Text();
 						lala.text = jobText;
+						
 					
 					}				
 					else{				
 						viewText.text = jobText;
-						viewWind.title = job.jobWindow.jobcompany.text + " - " + job.jobWindow.jobtitle.text;
+						viewWind.title = selectedJob.company + " - " + selectedJob.title;
+						trace(viewWind.title);
 					}
 				}
 				else if(selectedNode!=null && (selectedNode.localName()=="folder" || selectedNode.localName()=="root")){
@@ -814,7 +817,7 @@
 				   				
 				   else{							   
 						docviewText.text = docText;
-						docviewWind.title = doc.docWindow.title;
+						docviewWind.title = selectedNode.docWindow.title;
 			     	}
 			       
 			     	}
@@ -893,6 +896,7 @@
 					}				
 					else{				
 						docviewText.text = docText;
+						docviewWind.title = selectedNode.docWindow.title;
 					}
 			}
 				else if(selectedNode.localName()=="folder" || selectedNode.localName()=="root"){
