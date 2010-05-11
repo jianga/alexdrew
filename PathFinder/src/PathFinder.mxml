@@ -9,6 +9,7 @@
 	
 	<mx:Script>
 		<![CDATA[
+			import model.Job;
 			import mx.controls.List;
 			import mx.controls.Image;
 			import mx.containers.Panel;
@@ -41,6 +42,7 @@
             </root>;
 
 			[Bindable] public var selectedFolder:XML;
+			//[Bindable] public var docTree:Tree = new Tree();
 
 			[Embed(source="Pictures/calendar.jpg")]
 			public var calendarpicture:Class;
@@ -67,10 +69,14 @@
             private var docListfile:File;
             private var docListfileStream:FileStream;
             private var docListfileName:String = "PathFinderdocListdata";
-
+			[Bindable] public var selectedJob:Job;
 			
 			private function resize():void{
 				
+			}
+			
+			public function get myDocTree():Tree{
+				return this.docTree;
 			}
 
 
@@ -408,7 +414,7 @@
 
 			[Bindable] private var selectedNode:XML;
 			[ArrayElementType("Job")]
-			[Bindable] private var jobList:ArrayCollection = new ArrayCollection();
+			[Bindable] public var jobList:ArrayCollection = new ArrayCollection();
 			[Bindable] private var editing:Boolean = false;
 			private var current:XML;
 			[Bindable] private var index:int;
@@ -508,7 +514,6 @@
             	
             	selectedNode = jobTree.selectedItem as XML;
             	
-//            	var selectedJob:Job;
 //            	for (var i:int = 0; i < jobList.length; ++i){
 //						var job1:Job = jobList[i];
 //						trace(job1.company);
@@ -520,9 +525,10 @@
 //
 //						}
 //					}
-					
+
 				jobText = job.viewText();
 				jobpane.selectedChild = view;
+
 				if(viewText == null){
 						viewWind = new TitleWindow();
 						viewWind.fontContext
@@ -739,7 +745,7 @@
 				addJobagain();
 			}
 			[ArrayElementType("Doc")]
-			[Bindable] private var docList:ArrayCollection = new ArrayCollection();
+			[Bindable] public var docList:ArrayCollection = new ArrayCollection();
 		
 		
 		

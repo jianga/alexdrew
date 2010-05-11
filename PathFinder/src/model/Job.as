@@ -1,13 +1,13 @@
 package model
 {
-	import mx.skins.halo.TitleBackground;
+	import mx.collections.ArrayCollection;
 	[RemoteClass]
 	public class Job
 	{
 		import ui.JobWindow;
 		import mx.containers.TitleWindow;
 		import mx.containers.Canvas;
-		
+		import mx.core.Application;
 		private var _deadline:String;
 		private var _date:Date;
 		private var _company:String;
@@ -15,6 +15,7 @@ package model
 		private var _requirements:String;
 		public var requirementsArray:Array;
 		public var jobWindow:JobWindow = new JobWindow();
+		[Bindable] public var docsArray:ArrayCollection = new ArrayCollection();
 		
 		private var _Notes:String;
 		private var _intDate:String;
@@ -39,7 +40,22 @@ package model
 				this._requirements = this._requirements.replace(" ", "");
 			}
 			this.requirementsArray = this._requirements.split(',');
-
+			this.docsArray=wind.docs;
+			var docList:ArrayCollection = mx.core.Application.application.docList;
+			for (var docName:String in docsArray){
+				//find the document
+								for (var i:int = 0; i < docList.length; ++i){
+	                               var doc:Doc = docList[i];
+	                               if(doc.title == docName){
+	                                       var myDoc:Doc = doc;
+	                                       myDoc.jobsArray.addItem(this.title);
+	                               }
+	                       }
+				//get the current job
+				//var myJobWindow:JobWindow = mx.core.Application.application.currentJobWindow;
+				//display associations
+				//this.docsArray.addItem(myDoc.title);
+			}
 		}
 		
 		public function viewText():String{

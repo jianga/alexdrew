@@ -5,31 +5,47 @@
 			<mx:Label x="10" y="49" text="Title:" id="sizeref" fontSize="18" height="32"/>
 			<mx:TextInput x="161" y="47" width="438" height="34" fontSize="18" id="jobtitle"/>
 			<mx:Text x="10" y="129" text="Requirements &#xd;for Application:" width="143" height="109" fontSize="18" textAlign="left"/>
-			<mx:Button x="10" y="258" id = "addbutton" label="Add Another Field" fontSize="18" click="addField()"/>
+			<mx:Button x="10" y="330" id = "addbutton" label="Add Field" fontSize="18" click="addField()" width="143"/>
 			<mx:DateField showToday = "true" x="161" y="89" height="32" fontSize="18" id="jobdeadline" width="156"/>
 			<mx:Label x="10" y="91" text="Deadline:" width="97" height="32" fontSize="18"/>
 						
 		<mx:Script>
 		<![CDATA[
+			import mx.collections.ArrayCollection;
+			import mx.containers.VBox;
+			import mx.core.Application;
+			import mx.core.WindowedApplication;
+			import mx.containers.Canvas;
+			import mx.containers.ViewStack;
+			import mx.controls.Tree;
+			import mx.controls.Spacer;
+			import flash.text.engine.SpaceJustifier;
+			import mx.containers.ControlBar;
+			import mx.containers.Panel;
 			import mx.controls.DateChooser;
 			import mx.controls.Text;
 			import mx.controls.List;
 			import mx.controls.ComboBox;
 			import model.Doc;
 			import model.Job;
+			import mx.managers.PopUpManager;
 			import mx.binding.utils.BindingUtils;
 			private var dropdown:ComboBox = new ComboBox();
 			[Bindable] private var nameInput:TextInput = new TextInput();
 			public var fieldlist:Array= new Array("Interview Date","Notes");
 			private var OKButton:Button = new Button();
 			private var CancelFieldButton:Button = new Button();
-			
+			[Bindable] public var docTree:Tree;
+			private var getDoc:Panel = new Panel();
+			[Bindable] public var docs:ArrayCollection=new ArrayCollection();		
+
 			public var input:TextArea = new TextArea();
 			public var datechoose:DateField=new DateField();
 			public var Pinput:TextInput = new TextInput();
 			public var Tinput:TextInput = new TextInput();
 			
 			private function init():void{
+
 				dropdown.dataProvider = fieldlist;
 				dropdown.styleName="myFontStyle";
 				dropdown.id="dropdown";
@@ -59,6 +75,65 @@
 				CancelFieldButton.y=dropdown.y
 				
 				
+			}
+			
+			public function getDocument():void{
+				trace("addDoc popup");
+				docTree=new Tree();
+				docTree.dataProvider = mx.core.Application.application.myDocs;
+				docTree.labelField = "@label";
+				getDoc = new Panel();
+				getDoc.title = "Add Documents to Job";
+				var cb:ControlBar = new ControlBar();
+				var spacerThing:Spacer = new Spacer();
+				var instruction:Text = new Text();
+				instruction.text = "Select document to add to Job:";
+				var addButton:Button = new Button();
+				addButton.label = "Add";
+				addButton.addEventListener(MouseEvent.CLICK, chooseDoc);
+				var cancelButton:Button = new Button();
+				cancelButton.label="Cancel";
+				cancelButton.addEventListener(MouseEvent.CLICK, cancelChoose);
+				cb.addChild(spacerThing);
+				cb.addChild(addButton);
+				cb.addChild(cancelButton);
+				var dvb:VBox=new VBox();
+				dvb.addChild(instruction);
+				dvb.addChild(docTree);
+				dvb.setStyle("paddingBottom", 10);
+                dvb.setStyle("paddingLeft", 10);
+                dvb.setStyle("paddingRight", 10);
+                dvb.setStyle("paddingTop", 10);
+                dvb.setStyle("horizontalAlign","left");
+				getDoc.addChild(dvb);
+				getDoc.addChild(cb);
+				
+				PopUpManager.addPopUp(getDoc, this, true);
+                PopUpManager.centerPopUp(getDoc);
+			
+			}
+			
+			private function chooseDoc(evt:Event):void{
+				var myDocXML:XML = docTree.selectedItem as XML;
+				if (myDocXML!=null){
+				var myDoc:Doc;
+				var docList:ArrayCollection=mx.core.Application.application.docList;
+				//get the actual doc
+				for (var i:int = 0; i < docList.length; ++i){
+	                               var doc:Doc = docList[i];
+	                               if(doc.title == myDocXML.attribute("label")){
+	                                       myDoc = doc;
+	                               }
+	                       }
+				//get the current job
+				//var myJobWindow:JobWindow = mx.core.Application.application.currentJobWindow;
+				//display associations
+				this.docs.addItem(myDoc.title);}
+				PopUpManager.removePopUp(getDoc);
+			}
+			
+			private function cancelChoose(evt:Event):void{
+				PopUpManager.removePopUp(getDoc);
 			}
 			
 			private function cancelNewField(evt:MouseEvent):void{
@@ -171,5 +246,8 @@
 		]]>
 	</mx:Script>
 		<mx:TextArea x="161" y="129" width="438" height="121" id="jobrequirements" fontSize="18"/>
+		<mx:Button id="docbutton" x="567" y="258" label="+" width="32" height="30" click="getDocument()" fontSize="12"/>
+		<mx:List x="161" y="258" width="398" height="64" dataProvider="{docs}" fontSize="18"></mx:List>
+		<mx:Label x="10" y="258" text="Documents:" fontSize="18"/>
 	
 </mx:TitleWindow>

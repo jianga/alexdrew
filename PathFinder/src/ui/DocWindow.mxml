@@ -4,12 +4,15 @@
 		<mx:TextInput x="109" y="10" width="488" height="32" fontSize="18" id="doctitle"/>
 		<mx:Label x="10" y="50" text="Description:" fontSize="18"/>
 		<mx:Label x="10" y="161" text="File:" fontSize="18"/>
+		<mx:Label x="10" y="204" text="Jobs:" fontSize="18"/>
 		<mx:TextInput x="109" y="159" height="32" width="225" fontSize="18" id="docfile"/>
 		<mx:Button x="343" y="159" label="Browse..." fontSize="20" click="newBrowseWindow(event)"/>
 
 		
 		<mx:Script>
 			<![CDATA[
+				import mx.collections.ArrayCollection;
+				import mx.controls.Tree;
 			
 			import mx.managers.PopUpManager
 			import mx.containers.Panel;
@@ -22,6 +25,9 @@
 			import mx.controls.Alert;
 			import flash.html.HTMLPDFCapability;
 			import mx.controls.HTML;
+			import mx.controls.Text;
+			import model.Job;
+			import model.Doc;
 			
 			//public var fileThingy:List = new List();
 			private var browserPanel:Panel = new Panel();
@@ -29,7 +35,9 @@
 			public var file:File = File.desktopDirectory;
 			public var vb2:VBox = new VBox();
 			public var path:String;
-					
+			[Bindable] public var jobTree:Tree;	
+			public var getJob:Panel;
+			[Bindable] public var jobs:ArrayCollection=new ArrayCollection();	
 		
 			
 			private function newBrowseWindow(evt:MouseEvent):void{
@@ -81,6 +89,67 @@
 				PopUpManager.removePopUp(browserPanel);
 			}
 			
+			public function getJobToAdd():void{
+				trace("addJob popup");
+				jobTree=new Tree();
+				jobTree.dataProvider = mx.core.Application.application.myJobs;
+				jobTree.labelField = "@label";
+				getJob = new Panel();
+				getJob.title = "Add Document to Job";
+				var cb:ControlBar = new ControlBar();
+				var spacerThing:Spacer = new Spacer();
+				var instruction:Text = new Text();
+				instruction.text = "Select job:";
+				var addButton:Button = new Button();
+				addButton.label = "Add";
+				addButton.addEventListener(MouseEvent.CLICK, chooseJob);
+				var cancelButton:Button = new Button();
+				cancelButton.label="Cancel";
+				cancelButton.addEventListener(MouseEvent.CLICK, cancelChoose);
+				cb.addChild(spacerThing);
+				cb.addChild(addButton);
+				cb.addChild(cancelButton);
+				var dvb:VBox=new VBox();
+				dvb.addChild(instruction);
+				dvb.addChild(jobTree);
+				dvb.setStyle("paddingBottom", 10);
+                dvb.setStyle("paddingLeft", 10);
+                dvb.setStyle("paddingRight", 10);
+                dvb.setStyle("paddingTop", 10);
+                dvb.setStyle("horizontalAlign","left");
+				getJob.addChild(dvb);
+				getJob.addChild(cb);
+				
+				PopUpManager.addPopUp(getJob, this, true);
+                PopUpManager.centerPopUp(getJob);
+			
+			}
+			
+			private function cancelChoose(evt:MouseEvent):void{
+				PopUpManager.removePopUp(getJob);
+			}
+			
+			private function chooseJob(evt:MouseEvent):void{
+				var myJobXML:XML = jobTree.selectedItem as XML;
+				var myJob:Job;
+				var jobList:ArrayCollection=mx.core.Application.application.jobList;
+				//get the actual doc
+				if (myJobXML!=null){
+				//this.jobs.addItem(myJobXML.attribute("@label"));}
+				for (var i:int = 0; i < jobList.length; ++i){
+	                               var job:Job = jobList[i];
+	                               var jobLabel:String = (job.company+" - "+job.title);
+	                               if(jobLabel == myJobXML.attribute("label")){
+	                                       myJob = job;
+	                                       this.jobs.addItem(jobLabel);
+	                               }
+	                       }}
+				//get the current job
+				//var myJobWindow:JobWindow = mx.core.Application.application.currentJobWindow;
+				//display associations
+				
+				PopUpManager.removePopUp(getJob);
+			}
 
 			private function closePopUpB(evt:MouseEvent):void {
             	trace("closing browse window");
@@ -96,10 +165,12 @@
 //              		Alert.show("Can't display PDF content","Problem");
 //           	 	}
                 	PopUpManager.removePopUp(browserPanel);
-            	}
-            	
+   }
+   	
 		]]>
 		</mx:Script>
 		<mx:TextArea x="109" y="50" width="488" height="101" id="docdescription" fontSize="18"/>
+		<mx:Button label="+" width="31" height="30" fontSize="12" horizontalCenter="286" y="199" click="getJobToAdd()" id="jobbutton"/>
+		<mx:List x="109" y="199" width="449" height="138" dataProvider="{jobs}" fontSize="18"></mx:List>
 		
 </mx:TitleWindow>
