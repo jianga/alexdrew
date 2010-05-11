@@ -1,7 +1,5 @@
 package model
 {
-	import mx.controls.Tree;
-	import mx.core.WindowedApplication;
 	import mx.collections.ArrayCollection;
 
 	[RemoteClass]
@@ -24,6 +22,7 @@ package model
 		private var _intDate:String;
 		private var _intPlace:String;
 		private var _inttime:String;
+		private var _docs:String;
 
 		
 		public function Job(wind:JobWindow)
@@ -40,6 +39,7 @@ package model
 			this._intDate = wind.datechoose.text;
 			this._intPlace = wind.Pinput.text;
 			this._inttime = wind.Tinput.text;
+			this._docs = wind.docs.toString();
 			while (this._requirements.indexOf(" ") != -1 ) {
 				this._requirements = this._requirements.replace(" ", "");
 			}
@@ -65,7 +65,7 @@ package model
 		public function viewText():String{
 			var text:String;
 			
-			text = "Deadline:           " + this._deadline + "\n" + "Requirements:   " + this._requirements;
+			text = "Deadline:           " + this._deadline + "\n" + "Requirements:   " + this._requirements + "\n" + "Documents:       " + this._docs;
 			
 			if(this._Notes!=""){
 				text = text + "\n" + "Notes:                " + this._Notes;
