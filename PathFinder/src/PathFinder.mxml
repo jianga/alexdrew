@@ -332,7 +332,7 @@
 			</mx:ViewStack>
 
 			<mx:TitleWindow id = "todo" x="565" y="92" width="351" height="524" layout="absolute" title="To Do:" fontSize="20">
-				<mx:Text x="38.5" y="27" text="Any requirements added to a Job &#xd;will be listed here" textAlign="center" fontSize="14" width="254" height="41"/>
+				<mx:Text id = "lala" x="38.5" y="27" text="Any requirements added to a Job &#xd;will be listed here" textAlign="center" fontSize="14" width="254" height="41"/>
 				<!--><mx:CheckBox x="10" y="20" label="Add a Job" width="311"/><-->
 
 			</mx:TitleWindow>
@@ -562,7 +562,7 @@
            	
            	singleClickJob();
 
-
+				lala.text = "";
             	trace(job.requirementsArray);
             	var jobTitle:Label = new Label();
             	jobTitle.text = jobLabel;
