@@ -40,9 +40,9 @@ package model
 			this._intPlace = wind.Pinput.text;
 			this._inttime = wind.Tinput.text;
 			this._docs = wind.docs.toString();
-			while (this._requirements.indexOf(" ") != -1 ) {
-				this._requirements = this._requirements.replace(" ", "");
-			}
+		//	while (this._requirements.indexOf(" ") != -1 ) {
+		//		this._requirements = this._requirements.replace(" ", "");
+		//	}
 			this.requirementsArray = this._requirements.split(',');
 			this.docsArray=wind.docs;
 			var docList:ArrayCollection = mx.core.Application.application.docList;
